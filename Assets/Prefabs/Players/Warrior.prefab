@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 58458078561927908}
   - component: {fileID: 50699237848536532}
   - component: {fileID: -2208245523531374307}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Warrior
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -69,9 +69,9 @@ Rigidbody2D:
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
+  m_Constraints: 0
 --- !u!114 &-2208245523531374307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 4610092612769526}
   - component: {fileID: 20925768905277832}
   - component: {fileID: 124961694010922488}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: CameraEquipmentAvatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,7 +185,7 @@ GameObject:
   - component: {fileID: 4560512572600470}
   - component: {fileID: 23789131938690578}
   - component: {fileID: 102450461683069762}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: NameOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,7 +280,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4728258184652806}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: NameOverlayPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +312,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6322557350992822699}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 1968901679226056780}
   - component: {fileID: 8864883937867243671}
   - component: {fileID: 2843921596891383085}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: sprite_weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,9 +383,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CategoryHash: 2.3969758e-13
+  m_CategoryHash: 3.0155645e-28
   m_labelHash: 0.00000040954276
-  m_SpriteKey: 9.486812e-27
+  m_SpriteKey: 8.627778e-34
 --- !u!114 &1968901679226056780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -438,10 +438,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1785624449
+  m_SortingLayer: 1
   m_SortingOrder: 20
-  m_Sprite: {fileID: -1811775171, guid: 03206835b53a6d6449e2c907c140ef6b, type: 3}
+  m_Sprite: {fileID: 824709586, guid: 03206835b53a6d6449e2c907c140ef6b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 2342145111617074974}
   - component: {fileID: 2033366113639478159}
   - component: {fileID: 2463196144142939659}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: sprite_body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -520,9 +520,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CategoryHash: 7.489701e-21
+  m_CategoryHash: 3.0155645e-28
   m_labelHash: 0.00000040954276
-  m_SpriteKey: 9.486812e-27
+  m_SpriteKey: 8.627778e-34
 --- !u!114 &2342145111617074974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -575,10 +575,10 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1785624449
+  m_SortingLayer: 1
   m_SortingOrder: 20
-  m_Sprite: {fileID: -1162909238, guid: b3609cd78fcd91f4a8a50d8c484db9bf, type: 3}
+  m_Sprite: {fileID: 1249791710, guid: b3609cd78fcd91f4a8a50d8c484db9bf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -619,7 +619,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5042255090813705665}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: ChildRoot(All children under one parent so we can offset them when on a
     mount)
   m_TagString: Untagged
@@ -655,7 +655,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3196300715052012985}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: EffectMount
   m_TagString: Untagged
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}

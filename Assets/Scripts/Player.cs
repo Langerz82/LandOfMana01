@@ -119,9 +119,9 @@ public class Player : MonoBehaviour
 
         destination = clampPlayer(destination);
 
-        //bool hit = Physics2D.Raycast(destination, -Vector2.down, 1, 1 << LayerMask.NameToLayer("Default"));
+        bool hit = Physics2D.Raycast(destination, -Vector2.up, 1, 1 << LayerMask.NameToLayer("Collision"));
 
-        //if (!hit)
+        if (!hit)
             myRigidBody.transform.position = destination;
     }
 

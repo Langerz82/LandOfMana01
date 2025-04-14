@@ -12,7 +12,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Collision
   - 
   - 
   - 
@@ -47,4 +47,7 @@ TagManager:
     locked: 0
   - name: foreground
     uniqueID: 3400440685
+    locked: 0
+  - name: Collision
+    uniqueID: 3403972455
     locked: 0
