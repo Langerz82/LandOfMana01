@@ -5,18 +5,17 @@ using System.ComponentModel;
 using System.Diagnostics;
 using UnityEngine;
 
-//using Rigidbody2D = UnityEngine.Physics2DModule.Rigidbody2D;
 using SpriteLibrary = UnityEngine.U2D.Animation.SpriteLibrary;
 using SpriteLibraryAsset = UnityEngine.U2D.Animation.SpriteLibraryAsset;
 
-//using CameraMMO2D;
-
 using Debug = UnityEngine.Debug;
+using System.Linq;
 
 public class Player : MonoBehaviour
 {
-    [HideInInspector] public Vector2 lookDirection;
-    public float speed = 1/16f;
+    [HideInInspector] public Vector2 lookDirection = Vector2.zero;
+    [HideInInspector] public Vector2 moveDirection = Vector2.zero;
+    public float speed = 1 / 16f;
 
     [HideInInspector] public CameraMMO2D cameraScript;
     [HideInInspector] public GameObject playerCamera;
@@ -27,9 +26,16 @@ public class Player : MonoBehaviour
     protected Animator[] mAnimators = new Animator[2];
     protected SpriteLibrary[] mySpriteLibs = new SpriteLibrary[2];
 
+    //[HideInInspector] protected GameObject goMain;
+    //[HideInInspector] protected Main mainScript;
+    //[HideInInspector] public GameObject[] goMaps;
+
     // Start is called before the first frame update
     void Start()
     {
+        //goMain = GameObject.FindWithTag("Main");
+        //mainScript = goMain.GetComponent<mainScript>();
+
         playerCamera = GameObject.FindWithTag("MainCamera");
         if (playerCamera)
             cameraScript = playerCamera.GetComponent<CameraMMO2D>();
@@ -62,45 +68,55 @@ public class Player : MonoBehaviour
             mySpriteLibs[1] = childTF.GetComponent<SpriteLibrary>();
             if (!mySpriteLibs[1]) Debug.Log("WEAPON SPRITELIB NOT FOUND.");
         }
-// END MOD
+
+        GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
+        foreach(GameObject map in goMaps)
+        {
+            if (map.GetComponent<BoxCollider2D>().bounds.Contains(transform.localPosition))
+                SetPlayerMap(map);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        lookDirection = Vector2.zero;
+        moveDirection = Vector2.zero;
 
         Vector3 destination = myRigidBody.transform.position;
 
         if (Input.GetKey(KeyCode.W))
         {
-            lookDirection.y = 1;
+            moveDirection.y = 1;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            lookDirection.y = -1;
+            moveDirection.y = -1;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            lookDirection.x = -1;
+            moveDirection.x = -1;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            lookDirection.x = 1;
+            moveDirection.x = 1;
+        }
+        if (moveDirection != Vector2.zero)
+        {
+            lookDirection = moveDirection;
         }
 
         if (lookDirection.x != 0)
         {
-            destination.x += (lookDirection.x * speed);
+            destination.x += (moveDirection.x * speed);
         }
-        if (lookDirection.y != 0)
+        else if (lookDirection.y != 0)
         {
-            destination.y += (lookDirection.y * speed);
+            destination.y += (moveDirection.y * speed);
         }
 
-// BEGIN MOD - JL - 5/6/24 - 12/6/24
+        // BEGIN MOD - JL - 5/6/24 - 12/6/24
         //bool isMoving = movement.IsMoving() && state != "CASTING" && !mountControl.IsMounted();
-        bool isMoving = lookDirection != Vector2.zero;
+        bool isMoving = moveDirection != Vector2.zero;
 
         foreach (Animator mAnimator in mAnimators)
         {
@@ -115,21 +131,32 @@ public class Player : MonoBehaviour
             mAnimator.SetFloat("LookY", lookDirection.y);
 
         }
-// END MOD
+        // END MOD
 
-        destination = clampPlayer(destination);
+        if (cameraScript.cameraBounds != null)
+            destination = clampPlayer(destination);
 
-        bool hit = Physics2D.Raycast(destination, -Vector2.up, 1, 1 << LayerMask.NameToLayer("Collision"));
+        //  README - The problem with this collision code is it does not respect the colliders dimensions.
+        //      So the collision will only take effect in the middle of the gamobject and not it's collision sides.
 
-        if (!hit)
+        //bool hit = Physics2D.Raycast(destination, -Vector2.up, 1, 1 << LayerMask.NameToLayer("Collision"));
+        //if (!hit)
             myRigidBody.transform.position = destination;
+    }
+
+    void OnTriggerEnter(Collider collider)
+    {
+        Debug.Log("OnTriggerEnter - collider name:" + collider);
+    }
+
+    void OnCollisionEnter (Collision collision)
+    {
+        Debug.Log("OnCollisionEnter - collision name:" + collision);
     }
 
     protected Vector3 clampPlayer(Vector3 destination)
     {
-        Vector3 offset = GetComponent<CircleCollider2D>().bounds.extents;
-        //offset.x /= 2;
-        //offset.y /= 2;
+        Vector3 offset = GetComponent<BoxCollider2D>().bounds.extents;
 
         return cameraScript.ClampMapWithOffset(destination, offset);
     }
@@ -138,4 +165,11 @@ public class Player : MonoBehaviour
     {
         return true;
     }
+
+    public void SetPlayerMap(GameObject goMap)
+    {
+        cameraScript.SetCameraBounds(goMap);
+    }
+
 }
+

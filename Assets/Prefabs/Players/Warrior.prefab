@@ -69,8 +69,8 @@ Rigidbody2D:
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
-  m_SleepingMode: 0
-  m_CollisionDetection: 1
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!114 &-2208245523531374307
 MonoBehaviour:
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lookDirection: {x: 0, y: 0}
-  speed: 0.0625
+  speed: 0.04
   cameraScript: {fileID: 0}
   playerCamera: {fileID: 0}
   myRigidBody: {fileID: 0}

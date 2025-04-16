@@ -23,7 +23,7 @@ public class CameraMMO2D : MonoBehaviour
     public float damp = 1f;
 
     // BEGIN MOD - JL - 8/6/24, 30/6/24
-    [HideInInspector] public TilemapRenderer myCollider;
+    [HideInInspector] public BoxCollider2D myCollider;
     public GameObject cameraBounds;
 
     // END MOD
@@ -61,7 +61,7 @@ public class CameraMMO2D : MonoBehaviour
 
         if (myCollider)
         {
-            Debug.Log("position:" + position);
+            //Debug.Log("position:" + position);
             Vector3 pos = ClampCamera(position);
             if (pos != Vector3.zero)
             {
@@ -80,7 +80,7 @@ public class CameraMMO2D : MonoBehaviour
         Vector2 camSize = new Vector2(
             myCamera.orthographicSize * myCamera.aspect,
             myCamera.orthographicSize);
-        Debug.Log("ClampMap - camSize:" + camSize);
+        //Debug.Log("ClampMap - camSize:" + camSize);
 
         return ClampMapWithOffset(myCollider, camSize, position);
     }
@@ -92,30 +92,10 @@ public class CameraMMO2D : MonoBehaviour
 
     // BEGIN MOD - JL - 6/6/24
     // Exact Copy from function in CameraMMO2D.
-    protected Vector3 ClampMapWithOffset(TilemapRenderer myCollider, Vector2 offset, Vector3 position)
+    protected Vector3 ClampMapWithOffset(BoxCollider2D boxCollider, Vector2 offset, Vector3 position)
     {
-        /*Vector2 mapSize = new Vector2(myCollider.bounds.size.x, myCollider.bounds.size.y);
-        Debug.Log("ClampMap - mapSize:" + mapSize);
-        //Debug.Log("myCollider.offset=" + myCollider.offset);
-        Debug.Log("myCollider.size=" + myCollider.bounds.size);
-        Debug.Log("myCollider.center=" + myCollider.bounds.center);
-        Debug.Log("myCollider.extents=" + myCollider.bounds.extents);
-
-        Bounds bounds = myCollider.bounds;
-        Vector2 boxTopLeft = new Vector2(
-            bounds.center.x - bounds.extents.x,
-            bounds.center.y + bounds.extents.y);
-        Debug.Log("ClampMap - boxTopLeft:" + boxTopLeft);
-
-        Vector2 mapMin = new Vector2(
-            myCollider.bounds.min.x,
-            myCollider.bounds.min.y);
-        Vector2 mapMax = new Vector2(
-            myCollider.bounds.max.x,
-            myCollider.bounds.max.y);*/
-
-        Vector2 clipMin = myCollider.bounds.min;
-        Vector2 clipMax = myCollider.bounds.max;
+        Vector2 clipMin = boxCollider.bounds.min;
+        Vector2 clipMax = boxCollider.bounds.max;
         if (offset != Vector2.zero)
         {
             //Debug.Log("ClampMap - mapMin:" + mapMin);
@@ -123,14 +103,14 @@ public class CameraMMO2D : MonoBehaviour
 
             clipMin = new Vector2(clipMin.x + offset.x, clipMin.y + offset.y);
             clipMax = new Vector2(clipMax.x - offset.x, clipMax.y - offset.y);
-            Debug.Log("ClampMap - clipMin:" + clipMin);
-            Debug.Log("ClampMap - clipMax:" + clipMax);
-            Debug.Log("ClampMap - position:" + position);
+            //Debug.Log("ClampMap - clipMin:" + clipMin);
+            //Debug.Log("ClampMap - clipMax:" + clipMax);
+            //Debug.Log("ClampMap - position:" + position);
         }
 
         float newX = Mathf.Clamp(position.x, clipMin.x, clipMax.x);
         float newY = Mathf.Clamp(position.y, clipMin.y, clipMax.y);
-        Debug.Log("ClampMap - new_position:" + (new Vector2(newX, newY)));
+        //Debug.Log("ClampMap - new_position:" + (new Vector2(newX, newY)));
         return new Vector3(newX, newY, position.z);
     }
     // END MOD
@@ -151,7 +131,7 @@ public class CameraMMO2D : MonoBehaviour
         if (bounds)
         {
             cameraBounds = bounds;
-            myCollider = cameraBounds.transform.GetChild(0).GetChild(0).GetComponent<TilemapRenderer>();
+            myCollider = cameraBounds.GetComponent<BoxCollider2D>();
         }
         else
         {
