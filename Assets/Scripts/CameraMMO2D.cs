@@ -63,7 +63,7 @@ public class CameraMMO2D : MonoBehaviour
         {
             //Debug.Log("position:" + position);
             Vector3 pos = ClampCamera(position);
-            if (pos != Vector3.zero)
+            if (pos != Vector3.zero && pos != position)
             {
                 position.x = pos.x;
                 position.y = pos.y;

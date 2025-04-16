@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
     protected Animator[] mAnimators = new Animator[2];
     protected SpriteLibrary[] mySpriteLibs = new SpriteLibrary[2];
 
+    protected bool hasCollided = false;
+    protected Vector3 prevMove;
     //[HideInInspector] protected GameObject goMain;
     //[HideInInspector] protected Main mainScript;
     //[HideInInspector] public GameObject[] goMaps;
@@ -105,15 +107,6 @@ public class Player : MonoBehaviour
             lookDirection = moveDirection;
         }
 
-        if (lookDirection.x != 0)
-        {
-            destination.x += (moveDirection.x * speed);
-        }
-        else if (lookDirection.y != 0)
-        {
-            destination.y += (moveDirection.y * speed);
-        }
-
         // BEGIN MOD - JL - 5/6/24 - 12/6/24
         //bool isMoving = movement.IsMoving() && state != "CASTING" && !mountControl.IsMounted();
         bool isMoving = moveDirection != Vector2.zero;
@@ -134,24 +127,43 @@ public class Player : MonoBehaviour
         // END MOD
 
         if (cameraScript.cameraBounds != null)
-            destination = clampPlayer(destination);
-
-        //  README - The problem with this collision code is it does not respect the colliders dimensions.
-        //      So the collision will only take effect in the middle of the gamobject and not it's collision sides.
-
-        //bool hit = Physics2D.Raycast(destination, -Vector2.up, 1, 1 << LayerMask.NameToLayer("Collision"));
-        //if (!hit)
-            myRigidBody.transform.position = destination;
+        {
+            Vector3 dest = clampPlayer(destination);
+            if (dest != destination)
+            {
+                myRigidBody.transform.position = prevMove;
+                hasCollided = false;
+            }
+        }
     }
 
-    void OnTriggerEnter(Collider collider)
+    void FixedUpdate()
     {
-        Debug.Log("OnTriggerEnter - collider name:" + collider);
+        if (hasCollided)
+        {
+            myRigidBody.velocity = Vector2.zero;
+            hasCollided = false;
+        }
+        else
+        {
+            myRigidBody.velocity = moveDirection * speed;
+            prevMove = myRigidBody.transform.position;
+        }
+
     }
 
-    void OnCollisionEnter (Collision collision)
+    void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log("OnCollisionEnter - collision name:" + collision);
+        Debug.Log("OnTriggerEnter2D - collider name:" + collider);
+        if (collider.transform.parent != null)
+        {
+            Debug.Log("layer" + collider.transform.parent.gameObject.layer);
+            if (collider.transform.parent.gameObject.layer == LayerMask.NameToLayer("Collision"))
+            {
+                myRigidBody.transform.position = prevMove;
+                hasCollided = true;
+            }
+        }
     }
 
     protected Vector3 clampPlayer(Vector3 destination)
@@ -172,4 +184,3 @@ public class Player : MonoBehaviour
     }
 
 }
-
