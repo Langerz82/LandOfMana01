@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4637076039056732}
-  - component: {fileID: 58458078561927908}
-  - component: {fileID: 50699237848536532}
   - component: {fileID: -2208245523531374307}
+  - component: {fileID: 520264366}
+  - component: {fileID: 520264365}
   m_Layer: 31
   m_Name: Warrior
   m_TagString: Player
@@ -35,23 +35,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &58458078561927908
-CircleCollider2D:
+--- !u!114 &-2208245523531374307
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1289234771990996}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
---- !u!50 &50699237848536532
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 628cc763d4d455d4ca01f067d30ef6fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lookDirection: {x: 0, y: 0}
+  moveDirection: {x: 0, y: 0}
+  speed: 10
+  cameraScript: {fileID: 0}
+  playerCamera: {fileID: 0}
+  myRigidBody: {fileID: 0}
+  state: 
+--- !u!50 &520264366
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -71,25 +74,33 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &-2208245523531374307
-MonoBehaviour:
+  m_Constraints: 4
+--- !u!61 &520264365
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1289234771990996}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 628cc763d4d455d4ca01f067d30ef6fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lookDirection: {x: 0, y: 0}
-  speed: 0.04
-  cameraScript: {fileID: 0}
-  playerCamera: {fileID: 0}
-  myRigidBody: {fileID: 0}
-  state: 
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.25}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &1455579909650094
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,7 +112,7 @@ GameObject:
   - component: {fileID: 4610092612769526}
   - component: {fileID: 20925768905277832}
   - component: {fileID: 124961694010922488}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: CameraEquipmentAvatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,7 +196,7 @@ GameObject:
   - component: {fileID: 4560512572600470}
   - component: {fileID: 23789131938690578}
   - component: {fileID: 102450461683069762}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: NameOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,7 +291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4728258184652806}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: NameOverlayPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +323,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6322557350992822699}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +360,7 @@ GameObject:
   - component: {fileID: 1968901679226056780}
   - component: {fileID: 8864883937867243671}
   - component: {fileID: 2843921596891383085}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: sprite_weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -486,7 +497,7 @@ GameObject:
   - component: {fileID: 2342145111617074974}
   - component: {fileID: 2033366113639478159}
   - component: {fileID: 2463196144142939659}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: sprite_body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -619,7 +630,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5042255090813705665}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: ChildRoot(All children under one parent so we can offset them when on a
     mount)
   m_TagString: Untagged
@@ -655,7 +666,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3196300715052012985}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: EffectMount
   m_TagString: Untagged
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}

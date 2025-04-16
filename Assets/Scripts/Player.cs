@@ -71,12 +71,7 @@ public class Player : MonoBehaviour
             if (!mySpriteLibs[1]) Debug.Log("WEAPON SPRITELIB NOT FOUND.");
         }
 
-        GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
-        foreach(GameObject map in goMaps)
-        {
-            if (map.GetComponent<BoxCollider2D>().bounds.Contains(transform.localPosition))
-                SetPlayerMap(map);
-        }
+        SetPlayerMap();
     }
 
     // Update is called once per frame
@@ -178,9 +173,33 @@ public class Player : MonoBehaviour
         return true;
     }
 
-    public void SetPlayerMap(GameObject goMap)
+    public void SetPlayerMap()
     {
-        cameraScript.SetCameraBounds(goMap);
+        GameObject map = getCurrentMap(transform.localPosition);
+        if (map)
+            cameraScript.SetCameraBounds(map);
     }
 
+    public GameObject getCurrentMap(Vector3 position)
+    {
+        GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
+        foreach (GameObject map in goMaps)
+        {
+            BoxCollider2D collider = map.transform.GetChild(0).GetComponent<BoxCollider2D>();
+            if (collider == null)
+            {
+                Debug.LogError("Put a BoxCollider on the Grid child object of map: " + map.name);
+                return null;
+            }
+            if (collider.bounds.Contains(position))
+                return map;
+        }
+        return null;
+    }
+
+    public void WarpPlayer(Vector3 position)
+    {
+        myRigidBody.transform.position = position;
+        SetPlayerMap();
+    }
 }
