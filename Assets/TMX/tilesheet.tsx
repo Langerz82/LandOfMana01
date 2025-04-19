@@ -3,7 +3,7 @@
  <properties>
   <property name="v" value=""/>
  </properties>
- <image source="tilesheet.png" width="320" height="4096"/>
+ <image source="tilesheet.png" width="320" height="1568"/>
  <tile id="0">
   <properties>
    <property name="length" value="3"/>
