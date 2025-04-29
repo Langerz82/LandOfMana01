@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff72ddc2da234e244a8e96eb44e4c03d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DefaultPixelsPerUnit: 100
+  m_DefaultPixelsPerUnit: 16
   m_DefaultEdgesPerEllipse: 32
   m_AnimationFramerate: 20
   m_DefaultMaterial: {fileID: 0}
   m_MaterialMatchings: []
   m_ObjectTypesXml: {fileID: 0}
   m_ParseXmlError: 
-  m_CollisionGeometryType: 0
+  m_CollisionGeometryType: 1
   m_LayerColors:
   - {r: 0.27450982, g: 0.50980395, b: 0.7058824, a: 1}
   - {r: 1, g: 0.3882353, b: 0.2784314, a: 1}

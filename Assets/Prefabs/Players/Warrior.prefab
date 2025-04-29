@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4637076039056732}
-  - component: {fileID: -2208245523531374307}
   - component: {fileID: 520264366}
   - component: {fileID: 520264365}
+  - component: {fileID: -2208245523531374307}
+  - component: {fileID: -2528471039261674674}
   m_Layer: 31
   m_Name: Warrior
   m_TagString: Player
@@ -35,25 +36,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-2208245523531374307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1289234771990996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 628cc763d4d455d4ca01f067d30ef6fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lookDirection: {x: 0, y: 0}
-  moveDirection: {x: 0, y: 0}
-  speed: 10
-  cameraScript: {fileID: 0}
-  playerCamera: {fileID: 0}
-  myRigidBody: {fileID: 0}
-  state: 
 --- !u!50 &520264366
 Rigidbody2D:
   serializedVersion: 4
@@ -88,7 +70,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.25}
+  m_Offset: {x: 0, y: -0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -101,6 +83,40 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-2208245523531374307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289234771990996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 628cc763d4d455d4ca01f067d30ef6fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerMovement: {fileID: -2528471039261674674}
+  state: 
+--- !u!114 &-2528471039261674674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289234771990996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d56a5e2b3be8d34ab33f2c6ba5f04d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lookDirection: {x: 0, y: 0}
+  moveDirection: {x: 0, y: 0}
+  speed: 10
+  cameraScript: {fileID: 0}
+  playerCamera: {fileID: 0}
+  myRigidBody: {fileID: 0}
+  myCollider: {fileID: 0}
+  hasCollided: 0
 --- !u!1 &1455579909650094
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,8 +465,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1785624449
-  m_SortingLayer: 1
+  m_SortingLayerID: -894526611
+  m_SortingLayer: 2
   m_SortingOrder: 20
   m_Sprite: {fileID: 824709586, guid: 03206835b53a6d6449e2c907c140ef6b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -586,8 +602,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1785624449
-  m_SortingLayer: 1
+  m_SortingLayerID: -894526611
+  m_SortingLayer: 2
   m_SortingOrder: 20
   m_Sprite: {fileID: 1249791710, guid: b3609cd78fcd91f4a8a50d8c484db9bf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

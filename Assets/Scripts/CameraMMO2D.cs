@@ -131,7 +131,7 @@ public class CameraMMO2D : MonoBehaviour
         if (bounds)
         {
             cameraBounds = bounds;
-            myCollider = cameraBounds.transform.GetChild(0).GetComponent<BoxCollider2D>();
+            myCollider = cameraBounds.transform.GetChild(1).GetComponent<BoxCollider2D>();
             if (myCollider == null)
             { 
                 Debug.LogWarning("Make sure BoxCollider2D is on tilemap Grid Object.");

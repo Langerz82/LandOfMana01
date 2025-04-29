@@ -47,7 +47,7 @@ public class PlayerWarp : MonoBehaviour
         Debug.Log("WarpPlayer");
         Rigidbody2D rigidBody = player.GetComponent<Rigidbody2D>();
         Vector3 newPos = rigidBody.transform.position - myCollider.gameObject.transform.position;
-        player.GetComponent<Player>().WarpPlayer(warpDestination.transform.position + newPos);
+        player.GetComponent<PlayerMovement>().WarpPlayer(warpDestination.transform.position + newPos);
         warpDestination.GetComponent<PlayerWarp>().hasWarped = true;
     }
 }

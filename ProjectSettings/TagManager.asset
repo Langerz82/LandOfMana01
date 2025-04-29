@@ -43,12 +43,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Entities
+  - name: background
     uniqueID: 2509342847
     locked: 0
-  - name: foreground
+  - name: entities
     uniqueID: 3400440685
     locked: 0
-  - name: Collision
-    uniqueID: 3403972455
+  - name: foreground
+    uniqueID: 97549213
     locked: 0
