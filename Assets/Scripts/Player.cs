@@ -16,30 +16,23 @@ using System.Linq;
 public class Player : MonoBehaviour
 {
     [Header("Components")]
-    public PlayerMovement playerMovement;
+    public PlayerMovement myMovement;
 
     [HideInInspector] public string state;
 
-    protected Animator[] mAnimators = new Animator[2];
+    protected Animator[] myAnimators = new Animator[2];
     protected SpriteLibrary[] mySpriteLibs = new SpriteLibrary[2];
 
     // Start is called before the first frame update
     void Start()
     {
-        //goMain = GameObject.FindWithTag("Main");
-        //mainScript = goMain.GetComponent<mainScript>();
-
-        // BEGIN MOD - JL - 5/6/24 - 12/6/24
-        //mAnimators = new Animator[2];
-        //mySpriteLibs = new SpriteLibrary[2];
-
         Transform childTF = transform.GetChild(0).Find("sprites").Find("sprite_body");
         if (childTF)
         {
             Debug.Log("childTF - found");
-            mAnimators[0] = GetComponent<Animator>();
-            if (!mAnimators[0]) mAnimators[0] = childTF.GetComponent<Animator>();
-            if (!mAnimators[0]) Debug.Log("Player - mAnimators[0] not found.");
+            myAnimators[0] = GetComponent<Animator>();
+            if (!myAnimators[0]) myAnimators[0] = childTF.GetComponent<Animator>();
+            if (!myAnimators[0]) Debug.Log("Player - mAnimators[0] not found.");
             mySpriteLibs[0] = childTF.GetComponent<SpriteLibrary>();
             if (!mySpriteLibs[0]) Debug.Log("BODY SPRITELIB NOT FOUND.");
         }
@@ -48,33 +41,26 @@ public class Player : MonoBehaviour
         if (childTF)
         {
             Debug.Log("childTF2 - found");
-            mAnimators[1] = GetComponent<Animator>();
-            if (!mAnimators[1]) mAnimators[1] = childTF.GetComponent<Animator>();
-            if (!mAnimators[1]) Debug.Log("Player - mAnimators[1] not found.");
+            myAnimators[1] = GetComponent<Animator>();
+            if (!myAnimators[1]) myAnimators[1] = childTF.GetComponent<Animator>();
+            if (!myAnimators[1]) Debug.Log("Player - mAnimators[1] not found.");
             mySpriteLibs[1] = childTF.GetComponent<SpriteLibrary>();
             if (!mySpriteLibs[1]) Debug.Log("WEAPON SPRITELIB NOT FOUND.");
         }
+        myMovement = GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        bool isMoving = (myMovement.myRigidbody.velocity != Vector2.zero);
 
-        //bool isMoving = movement.IsMoving() && state != "CASTING" && !mountControl.IsMounted();
-        bool isMoving = playerMovement.myRigidbody.velocity != Vector2.zero;
-
-        foreach (Animator mAnimator in mAnimators)
+        foreach (Animator mAnimator in myAnimators)
         {
             mAnimator.SetBool("MOVING", isMoving);
-            mAnimator.SetBool("CASTING", state == "CASTING");
-            /*foreach (Skill skill in skills.skills)
-                if (skill.level > 0 && !(skill.data is PassiveSkill) && AnimationHasParameter(mAnimator, skill.name))
-                    mAnimator.SetBool(skill.name, skill.CastTimeRemaining() > 0);*/
-            mAnimator.SetBool("STUNNED", state == "STUNNED");
             mAnimator.SetBool("DEAD", state == "DEAD");
-            mAnimator.SetFloat("LookX", playerMovement.lookDirection.x);
-            mAnimator.SetFloat("LookY", playerMovement.lookDirection.y);
-
+            mAnimator.SetFloat("LookX", myMovement.lookDirection.x);
+            mAnimator.SetFloat("LookY", myMovement.lookDirection.y);
         }
 
     }

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Npc
   - Map
+  - Monster
+  - EntityName
+  - Main
   layers:
   - Default
   - TransparentFX

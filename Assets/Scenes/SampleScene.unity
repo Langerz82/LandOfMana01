@@ -251,18 +251,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -2528471039261674674, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
-      propertyPath: speed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 520264365, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
-      propertyPath: m_Size.x
-      value: 0.95
-      objectReference: {fileID: 0}
-    - target: {fileID: 520264365, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
-      propertyPath: m_Size.y
-      value: 0.95
-      objectReference: {fileID: 0}
     - target: {fileID: 1289234771990996, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
       propertyPath: m_Name
       value: Warrior
@@ -273,7 +261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4637076039056732, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10
+      value: 10.5
       objectReference: {fileID: 0}
     - target: {fileID: 4637076039056732, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1028,7 +1016,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -579204277323119330, guid: 8de04b88de8f475489bfcdfc7bbf59b2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -579204277323119330, guid: 8de04b88de8f475489bfcdfc7bbf59b2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1366,7 +1354,7 @@ GameObject:
   - component: {fileID: 1884019340}
   m_Layer: 0
   m_Name: Main
-  m_TagString: Untagged
+  m_TagString: Main
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1386,6 +1374,7 @@ MonoBehaviour:
   maps:
   - {fileID: 1583669456}
   - {fileID: 1120237156}
+  players: []
   mainPlayer: {fileID: 258451849}
   playerScript: {fileID: 0}
 --- !u!4 &1884019341

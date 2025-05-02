@@ -68,43 +68,47 @@ public class PlayerMovement : MonoBehaviour
             if (tPath.Length > 1)
             {
                 myPath = tPath;
-                //myRigidbody.simulated = false;
             }
             else
             {
-                myPath = null;
+                ResetPath();
             }
             Debug.Log("PlayerMovement myPath:" + myPath);
         }
 
-        if (myPath == null && myRigidbody.velocity == Vector2.zero)
+        // I had to remove it to let the grid rounding work properly. 
+        // velocity is checked so the player cant change direction without finishing on the grid.
+        // I need to do a workaround so both cases will work properly.
+        // Velocity on the opposite axis is checked to make sure the entity
+        // is on the grid before moving again in a different direction.
+        if (myPath == null)
         {
             // NOTE - Make sure only one key will work at a time.
-            if (Input.GetAxis("Vertical") > 0)
+            bool noVec = (myRigidbody.velocity == Vector2.zero);
+            if (Input.GetAxis("Vertical") > 0 && (noVec || myRigidbody.velocity.y > 0))
             {
                 moveDirection.y = 1;
             }
-            else if (Input.GetAxis("Vertical") < 0)
+            else if (Input.GetAxis("Vertical") < 0 && (noVec || myRigidbody.velocity.y < 0))
             {
                 moveDirection.y = -1;
             }
-            else if (Input.GetAxis("Horizontal") < 0)
+            else if (Input.GetAxis("Horizontal") < 0 && (noVec || myRigidbody.velocity.x < 0))
             {
                 moveDirection.x = -1;
             }
-            else if (Input.GetAxis("Horizontal") > 0)
+            else if (Input.GetAxis("Horizontal") > 0 && (noVec || myRigidbody.velocity.x > 0))
             {
                 moveDirection.x = 1;
             }
         }
-
     }
 
     void FixedUpdate()
     {
         Vector3 pos = transform.position;
 
-        if (myPath != null)
+        if (myPath != null && myPath.Length > 1)
         {
             Vector2 dest = (Vector2)myPath[myPathIndex];
             Vector2 dir = ((Vector2)dest - (Vector2)pos).normalized;
@@ -122,11 +126,11 @@ public class PlayerMovement : MonoBehaviour
             }
             if (myPathIndex >= myPath.Length)
             {
-                myPathIndex = 1;
-                myPath = null;
-                //myRigidbody.simulated = true;
+                ResetPath();
             }
         }
+        else
+            ResetPath();
 
         // This section of code makes sure the player does not go outside the map bounds.
         if (cameraScript.cameraBounds != null)
@@ -134,7 +138,6 @@ public class PlayerMovement : MonoBehaviour
             Vector3 dest = clampPlayer(pos);
             if (dest != pos)
             {
-                ///myRigidbody.transform.position = prevMove;
                 hasCollided = true;
             }
         }
@@ -147,15 +150,15 @@ public class PlayerMovement : MonoBehaviour
         if (myPath == null && (myRigidbody.velocity != Vector2.zero || moveDirection != Vector2.zero))
         {
             Vector2 velocity = (moveDirection != Vector2.zero) ? moveDirection * speed : myRigidbody.velocity;
-            Vector2 nextOffset = velocity * Time.deltaTime;
-            //Debug.Log("nextPosition: " + nextOffset);
+            Vector2 nextOffset = velocity * Time.deltaTime; // * (Vector2.one / myCollider.size);
             Vector2 center = nextOffset + (Vector2)pos + myCollider.offset;
             if (mapScript.checkWorldCollision(center, myCollider.size))
             {
                 hasCollided = true;
                 snapToGrid = false;
-                //myRigidbody.transform.position = pos;
-                myRigidbody.transform.position = Vector3Int.RoundToInt(pos);
+
+                // Snap to the grid.
+                transform.position = Utils.RoundToGrid(pos, myRigidbody.velocity);
             }
         }
 
@@ -170,38 +173,35 @@ public class PlayerMovement : MonoBehaviour
         {
             bool isMoving = moveDirection != Vector2.zero;
             if (isMoving)
+            {
                 myRigidbody.velocity = moveDirection * speed;
+            }
 
             // Round the movement off.
             if (!isMoving && myRigidbody.velocity != Vector2.zero)
             {
-                // TODO when collided when you try to move the other way and let go of key, it skips a few grids before stopping.
-                float speedDist = speed * Time.unscaledDeltaTime;
                 Vector2 velocity = myRigidbody.velocity;
-                Vector2 targetPos = pos;
-                if (velocity.x != 0)
+                Vector3 targetPos = Utils.RoundToGrid(pos, velocity);
+                float tx = Math.Abs(pos.x - targetPos.x);
+                float ty = Math.Abs(pos.y - targetPos.y);
+                float speedDist = speed * Time.unscaledDeltaTime;
+                if ((velocity.x != 0 && tx <= speedDist) || (velocity.y != 0 && ty <= speedDist))
                 {
-                    targetPos.x = (float)(velocity.x < 0 ? Math.Floor(pos.x) : Math.Ceiling(pos.x));
-                    if (Math.Abs(pos.x - targetPos.x) <= speedDist)
-                    {
-                        if (snapToGrid)
-                            transform.position = targetPos;
-                        myRigidbody.velocity = Vector2.zero;
-                    }
-                }
-                if (velocity.y != 0)
-                {
-                    targetPos.y = (float)(velocity.y < 0 ? Math.Floor(pos.y) : Math.Ceiling(pos.y));
-                    if (Math.Abs(pos.y - targetPos.y) <= speedDist)
-                    {
-                        if (snapToGrid)
-                            transform.position = targetPos;
-                        myRigidbody.velocity = Vector2.zero;
-                    }
+                    if (snapToGrid)
+                        myRigidbody.transform.position = targetPos;
+                    myRigidbody.velocity = Vector2.zero;
+                    moveDirection = Vector2.zero;
                 }
             }
         }
         snapToGrid = true;
+    }
+
+
+    void ResetPath()
+    {
+        myPathIndex = 1;
+        myPath = null;
     }
 
     protected Vector3 clampPlayer(Vector3 destination)
@@ -248,6 +248,8 @@ public class PlayerMovement : MonoBehaviour
         return null;
     }
 
+    /*
+    // Not needed for now.
     void OnTriggerEnter2D(Collider2D collider)
     {
         Debug.Log("OnTriggerEnter2D - collider name:" + collider);
@@ -258,5 +260,5 @@ public class PlayerMovement : MonoBehaviour
             {
             }
         }
-    }
+    }*/
 }

@@ -28,6 +28,7 @@ public class TileMap : MonoBehaviour
     protected bool[,] mapCollision = null;
 
     protected List<Vector2> collisionGrid = new List<Vector2>();
+    protected Vector2 colPosition;
 
     private void OnDrawGizmos()
     {
@@ -42,6 +43,10 @@ public class TileMap : MonoBehaviour
 
         foreach (Vector2 pos in collisionGrid)
             Gizmos.DrawWireCube(pos, size);
+
+        Gizmos.color = new Color(1f, 0f, 0f);
+        size = new Vector2(0.9f, 0.9f);
+        Gizmos.DrawWireCube(colPosition, size);
     }
 
     // Start is called before the first frame update
@@ -157,6 +162,9 @@ public class TileMap : MonoBehaviour
             if (drawGizmo)
             {
                 collisionGrid.Add(position);
+            } else
+            {
+                colPosition = position;
             }
 
             Debug.Log("checkCollision - pos: " + position);

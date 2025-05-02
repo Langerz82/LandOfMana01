@@ -9,7 +9,9 @@ using Debug = UnityEngine.Debug;
 public class Main : MonoBehaviour
 {
     public GameObject[] maps;
+    public GameObject[] players;
     public GameObject mainPlayer;
+
 
     [HideInInspector] public Player playerScript;
 
@@ -18,6 +20,7 @@ public class Main : MonoBehaviour
     {
         playerScript = mainPlayer.GetComponent<Player>();
         maps = GameObject.FindGameObjectsWithTag("Map");
+        players = GameObject.FindGameObjectsWithTag("Player");
     }
 
     // Update is called once per frame
