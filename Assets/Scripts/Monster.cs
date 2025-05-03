@@ -10,11 +10,11 @@ using Debug = UnityEngine.Debug;
 //using Math = System.Math;
 //using System.Linq;
 
-//[RequireComponent(typeof(CreatureMovement))]
+[RequireComponent(typeof(MonsterMovement))]
 public class Monster : MonoBehaviour
 {
-    //[Header("Components")]
-    //public CreatureMovement MyMovement;
+    [Header("Components")]
+    public MonsterMovement myMovement;
 
     [HideInInspector] public string state;
 
@@ -26,9 +26,11 @@ public class Monster : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        myMovement = GetComponent<MonsterMovement>();
+
         mainScript = GameObject.FindWithTag("Main").GetComponent<Main>();
 
-        Transform childTF = transform.GetChild(0).Find("sprites").Find("sprite_body");
+        Transform childTF = transform.Find("sprites").Find("sprite_body");
         if (childTF)
         {
             Debug.Log("childTF - found");
@@ -44,13 +46,12 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*bool isMoving = (myMovement.myRigidbody.velocity != Vector2.zero);
+        bool isMoving = (myMovement.myRigidbody.velocity != Vector2.zero);
 
         myAnimator.SetBool("MOVING", isMoving);
         myAnimator.SetBool("DEAD", state == "DEAD");
         myAnimator.SetFloat("LookX", myMovement.lookDirection.x);
         myAnimator.SetFloat("LookY", myMovement.lookDirection.y);
-        */
 
     }
 }

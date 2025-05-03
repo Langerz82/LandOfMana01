@@ -6,7 +6,7 @@ using UnityEngine;
 
 using Debug = UnityEngine.Debug;
 
-public class PlayerMovement : MonoBehaviour
+public class MonsterMovement : MonoBehaviour
 {
     [HideInInspector] public Vector2 lookDirection = Vector2.zero;
     [HideInInspector] public Vector2 moveDirection = Vector2.zero;
@@ -21,41 +21,118 @@ public class PlayerMovement : MonoBehaviour
     protected GameObject map;
     protected TileMap mapScript;
 
-    protected bool canClickMove = false;
-
     protected Vector2[] myPath = null;
     protected int myPathIndex = 1;
     protected bool isOnPath = false;
 
     protected bool snapToGrid = true;
 
+    public float aggressionRadius = 0f;
+    protected float aggressionTimer = 0f;
+    public float aggressionInterval = 1f;
+
+    protected float movementTimer = 0f;
+    public float movementInterval = 1f;
+
+    protected Main mainScript;
+
+    [HideInInspector] public string state;
+
+    [HideInInspector] public GameObject target;
+
     // Start is called before the first frame update
     void Start()
     {
-        cameraScript = GameObject.FindWithTag("MainCamera").GetComponent<CameraMMO2D>();
-        if (cameraScript == null)
-        {
-            Debug.LogError("MainCamera not found.");
-        }
-
+        mainScript = GameObject.FindWithTag("Main").GetComponent<Main>();
         myRigidbody = GetComponent<Rigidbody2D>();
         myCollider = GetComponent<BoxCollider2D>();
 
-        SetCameraMap();
+        state = "IDLE";
+
+        map = getCurrentMap(transform.position);
+        if (map)
+        {
+            mapScript = map.GetComponent<TileMap>();
+        }
+        else
+        {
+            Debug.LogError("MonsterMovement SetMap failed.");
+        }
+    }
+
+    public void FollowPlayer(GameObject player)
+    {
+        Vector2 pos = (Vector2) transform.position;
+
+        PlayerMovement playerMovementScript = player.GetComponent<PlayerMovement>();
+        Vector3[] spots = playerMovementScript.getAdjacentTiles();
+        int i = 0;
+        float shortestDist = 0;
+        int shortestIndex = 0;
+        foreach (Vector3 spot in spots)
+        {
+            float dist = Vector2.Distance(pos, (Vector2)spot);
+            if (shortestDist == 0f || dist < shortestDist)
+            {
+                shortestIndex = i;
+                shortestDist = dist;
+            }
+            i++;
+        }
+
+        Vector2 posTarget = spots[shortestIndex];
+        posTarget.y += myCollider.bounds.size.y / 2;
+        Vector2[] tPath = mapScript.FindWorldPath(pos, posTarget, myCollider);
+        if (tPath.Length > 1)
+        {
+            myPath = tPath;
+        }
+        else
+        {
+            ResetPath();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        moveDirection = Vector2.zero;
-
         Vector3 pos = transform.position;
 
-        canClickMove = false;
-        if (myPath == null && pos.x % 0.5 == 0 && pos.y % 0.5 == 0)
-            canClickMove = true;
+        aggressionTimer += Time.deltaTime;
+        movementTimer += Time.deltaTime;
 
-        if (canClickMove && Input.GetMouseButtonDown(0))
+        if (state=="IDLE" && aggressionRadius > 0f)
+        {
+            
+            if (aggressionTimer > aggressionInterval)
+            {
+                // Perform check.
+                foreach (GameObject player in mainScript.players)
+                {
+                    float dist = Vector3.Distance(pos, player.transform.position);
+                    if (dist <= aggressionRadius)
+                    {
+                        target = player;
+                        state = "MOVING";
+                        FollowPlayer(player);
+                        break;
+                    }
+                }
+                aggressionTimer = 0;
+            }
+        }
+        else if (state=="MOVING" && movementTimer > movementInterval)
+        {
+            float dist = Vector3.Distance(pos, target.transform.position);
+            if (target != null && myPath == null && dist > 1)
+                FollowPlayer(target);
+        }
+
+        moveDirection = Vector2.zero;
+
+        
+
+        /*if (canClickMove && Input.GetMouseButtonDown(0))
         {
             Vector2 posTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             posTarget.y += myCollider.bounds.size.y / 2;
@@ -68,35 +145,15 @@ public class PlayerMovement : MonoBehaviour
             {
                 ResetPath();
             }
-            Debug.Log("PlayerMovement myPath:" + myPath);
-        }
+            Debug.Log("CreatureMovement myPath:" + myPath);
+        }*/
+    }
 
-        // I had to remove it to let the grid rounding work properly. 
-        // velocity is checked so the player cant change direction without finishing on the grid.
-        // I need to do a workaround so both cases will work properly.
-        // Velocity on the opposite axis is checked to make sure the entity
-        // is on the grid before moving again in a different direction.
-        if (myPath == null)
-        {
-            // NOTE - Make sure only one key will work at a time.
-            bool noVec = (myRigidbody.velocity == Vector2.zero);
-            if (Input.GetAxis("Vertical") > 0 && (noVec || myRigidbody.velocity.y > 0))
-            {
-                moveDirection.y = 1;
-            }
-            else if (Input.GetAxis("Vertical") < 0 && (noVec || myRigidbody.velocity.y < 0))
-            {
-                moveDirection.y = -1;
-            }
-            else if (Input.GetAxis("Horizontal") < 0 && (noVec || myRigidbody.velocity.x < 0))
-            {
-                moveDirection.x = -1;
-            }
-            else if (Input.GetAxis("Horizontal") > 0 && (noVec || myRigidbody.velocity.x > 0))
-            {
-                moveDirection.x = 1;
-            }
-        }
+    void LookAtTarget()
+    {
+        if (target == null)
+        { return; }
+        lookDirection = (target.transform.position - transform.position).normalized;
     }
 
     void FixedUpdate()
@@ -120,19 +177,12 @@ public class PlayerMovement : MonoBehaviour
             if (myPathIndex >= myPath.Length)
             {
                 ResetPath();
+                LookAtTarget();
             }
         }
         else
-            ResetPath();
-
-        // This section of code makes sure the player does not go outside the map bounds.
-        if (cameraScript.cameraBounds != null)
         {
-            Vector3 dest = clampPlayer(pos);
-            if (dest != pos)
-            {
-                hasCollided = true;
-            }
+            ResetPath();
         }
 
         if (moveDirection != Vector2.zero)
@@ -151,6 +201,7 @@ public class PlayerMovement : MonoBehaviour
                 snapToGrid = false;
 
                 // Snap to the grid.
+                // TODO - Is buggy grid gets rounded into collision.
                 transform.position = Utils.RoundToGrid(pos, myRigidbody.velocity);
             }
         }
@@ -197,50 +248,6 @@ public class PlayerMovement : MonoBehaviour
         myPath = null;
     }
 
-    protected Vector3 clampPlayer(Vector3 destination)
-    {
-        Vector3 offset = GetComponent<BoxCollider2D>().bounds.extents;
-
-        return cameraScript.ClampMapWithOffset(destination, offset);
-    }
-
-    public void SetCameraMap()
-    {
-        map = getCurrentMap(transform.localPosition);
-        if (map)
-        {
-            cameraScript.SetCameraBounds(map);
-            mapScript = map.GetComponent<TileMap>();
-        }
-        else
-        {
-            Debug.LogError("PlayerMovement SetPlayerMap failed.");
-        }
-    }
-
-    public void WarpPlayer(Vector3 position)
-    {
-        myRigidbody.transform.position = position;
-        SetCameraMap();
-    }
-
-    public GameObject getCurrentMap(Vector3 position)
-    {
-        GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
-        foreach (GameObject map in goMaps)
-        {
-            BoxCollider2D collider = map.transform.GetChild(1).GetComponent<BoxCollider2D>();
-            if (collider == null)
-            {
-                Debug.LogError("Put a BoxCollider on the Grid child object of map: " + map.name);
-                return null;
-            }
-            if (collider.bounds.Contains(position))
-                return map;
-        }
-        return null;
-    }
-
     public Vector3[] getAdjacentTiles()
     {
         Vector3 center = transform.position;
@@ -260,11 +267,28 @@ public class PlayerMovement : MonoBehaviour
 
         foreach (Vector2 vec in adjacent)
         {
-            Vector2 tPos = (Vector2) center + vec;
+            Vector2 tPos = (Vector2)center + vec;
             if (mapScript.checkWorldCollision(tPos, myCollider.size))
                 continue;
-            positions.Add((Vector3) tPos);
+            positions.Add((Vector3)tPos);
         }
         return positions.ToArray();
+    }
+
+    public GameObject getCurrentMap(Vector3 position)
+    {
+        GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
+        foreach (GameObject map in goMaps)
+        {
+            BoxCollider2D collider = map.transform.GetChild(1).GetComponent<BoxCollider2D>();
+            if (collider == null)
+            {
+                Debug.LogError("Put a BoxCollider on the Grid child object of map: " + map.name);
+                return null;
+            }
+            if (collider.bounds.Contains(position))
+                return map;
+        }
+        return null;
     }
 }
