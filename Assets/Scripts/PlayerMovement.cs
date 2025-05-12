@@ -44,6 +44,38 @@ public class PlayerMovement : MonoBehaviour
         SetCameraMap();
     }
 
+    public void FollowEntity(GameObject entity)
+    {
+        Vector2 pos = (Vector2)transform.position;
+
+        Vector3[] spots = mapScript.getAdjacentTiles(entity);
+        int i = 0;
+        float shortestDist = 0;
+        int shortestIndex = 0;
+        foreach (Vector3 spot in spots)
+        {
+            float dist = Vector2.Distance(pos, (Vector2)spot);
+            if (shortestDist == 0f || dist < shortestDist)
+            {
+                shortestIndex = i;
+                shortestDist = dist;
+            }
+            i++;
+        }
+
+        Vector2 posTarget = spots[shortestIndex];
+        posTarget.y += myCollider.bounds.size.y / 2;
+        Vector2[] tPath = mapScript.FindWorldPath(pos, posTarget, myCollider);
+        if (tPath != null && tPath.Length > 1)
+        {
+            myPath = tPath;
+        }
+        else
+        {
+            ResetPath();
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -58,15 +90,24 @@ public class PlayerMovement : MonoBehaviour
         if (canClickMove && Input.GetMouseButtonDown(0))
         {
             Vector2 posTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            posTarget.y += myCollider.bounds.size.y / 2;
-            Vector2[] tPath = mapScript.FindWorldPath((Vector2)pos, (Vector2)posTarget, myCollider);
-            if (tPath.Length > 1)
+
+            Collider2D collider = Physics2D.OverlapBox(posTarget, myCollider.size, 0f, 1 << LayerMask.NameToLayer("Monsters"));
+            if (collider != null)
             {
-                myPath = tPath;
+                FollowEntity(collider.gameObject);
             }
             else
             {
-                ResetPath();
+                posTarget.y += myCollider.bounds.size.y / 2;
+                Vector2[] tPath = mapScript.FindWorldPath((Vector2)pos, (Vector2)posTarget, myCollider);
+                if (tPath != null && tPath.Length > 1)
+                {
+                    myPath = tPath;
+                }
+                else
+                {
+                    ResetPath();
+                }
             }
             Debug.Log("PlayerMovement myPath:" + myPath);
         }
@@ -151,7 +192,8 @@ public class PlayerMovement : MonoBehaviour
                 snapToGrid = false;
 
                 // Snap to the grid.
-                transform.position = Utils.RoundToGrid(pos, myRigidbody.velocity);
+                //transform.position = Utils.RoundToGrid(pos, velocity);
+                transform.position = Utils.RoundOffToGrid(pos);
             }
         }
 
@@ -174,7 +216,7 @@ public class PlayerMovement : MonoBehaviour
             if (!isMoving && myRigidbody.velocity != Vector2.zero)
             {
                 Vector2 velocity = myRigidbody.velocity;
-                Vector3 targetPos = Utils.RoundToGrid(pos, velocity);
+                Vector3 targetPos = Utils.RoundNextPosToGrid(pos, velocity);
                 float tx = Math.Abs(pos.x - targetPos.x);
                 float ty = Math.Abs(pos.y - targetPos.y);
                 float speedDist = speed * Time.unscaledDeltaTime;
@@ -206,11 +248,24 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetCameraMap()
     {
-        map = getCurrentMap(transform.localPosition);
+        map = getCurrentMap(transform.position);
         if (map)
         {
-            cameraScript.SetCameraBounds(map);
             mapScript = map.GetComponent<TileMap>();
+            if (mapScript != null)
+            {
+                mapScript.SetVisible(true);
+            }
+            else
+            {
+                Debug.LogError("PlayerMovement SetPlayerMap mapScript not found.");
+            }
+            cameraScript.SetCameraBounds(map);
+
+            // Add Player to Map Entities.
+            GameObject goEntities = map.transform.Find("Entities").gameObject;
+            if (goEntities != null && this.transform.parent != goEntities.transform)
+                this.transform.parent = goEntities.transform;
         }
         else
         {
@@ -229,7 +284,7 @@ public class PlayerMovement : MonoBehaviour
         GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
         foreach (GameObject map in goMaps)
         {
-            BoxCollider2D collider = map.transform.GetChild(1).GetComponent<BoxCollider2D>();
+            BoxCollider2D collider = map.transform.Find("Collider").gameObject.GetComponent<BoxCollider2D>();
             if (collider == null)
             {
                 Debug.LogError("Put a BoxCollider on the Grid child object of map: " + map.name);
@@ -241,30 +296,5 @@ public class PlayerMovement : MonoBehaviour
         return null;
     }
 
-    public Vector3[] getAdjacentTiles()
-    {
-        Vector3 center = transform.position;
-        if (myRigidbody.velocity != Vector2.zero)
-        {
-            center = Utils.RoundToGrid(center, myRigidbody.velocity);
-        }
 
-        List<Vector3> positions = new List<Vector3>();
-
-        Vector2[] adjacent = {
-            new Vector3(1, 0),
-            new Vector3(-1, 0),
-            new Vector3(0, 1),
-            new Vector3(0, -1)
-        };
-
-        foreach (Vector2 vec in adjacent)
-        {
-            Vector2 tPos = (Vector2) center + vec;
-            if (mapScript.checkWorldCollision(tPos, myCollider.size))
-                continue;
-            positions.Add((Vector3) tPos);
-        }
-        return positions.ToArray();
-    }
 }

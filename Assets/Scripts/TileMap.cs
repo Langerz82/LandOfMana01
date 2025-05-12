@@ -49,6 +49,18 @@ public class TileMap : MonoBehaviour
         Gizmos.DrawWireCube(colPosition, size);
     }
 
+    public void SetVisible(bool visible)
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in renderers)
+            r.enabled = visible;
+    }
+
+    void Awake()
+    {
+        SetVisible(false);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -186,5 +198,36 @@ public class TileMap : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public Vector3[] getAdjacentTiles(GameObject entity)
+    {
+        Vector3 center = entity.transform.position;
+        Rigidbody2D myRigidbody = entity.GetComponent<Rigidbody2D>();
+
+        if (myRigidbody != null && myRigidbody.velocity != Vector2.zero)
+        {
+            center = Utils.RoundNextPosToGrid(center, myRigidbody.velocity);
+        }
+
+        List<Vector3> positions = new List<Vector3>();
+
+        Vector2[] adjacent = {
+            new Vector3(1, 0),
+            new Vector3(-1, 0),
+            new Vector3(0, 1),
+            new Vector3(0, -1)
+        };
+
+        Collider2D myCollider = entity.GetComponent<Collider2D>();
+        Vector2 size = (myCollider != null ? myCollider.bounds.size : new Vector2(1f, 1f));
+        foreach (Vector2 vec in adjacent)
+        {
+            Vector2 tPos = (Vector2)center + vec;
+            if (checkWorldCollision(tPos, size))
+                continue;
+            positions.Add((Vector3)tPos);
+        }
+        return positions.ToArray();
     }
 }

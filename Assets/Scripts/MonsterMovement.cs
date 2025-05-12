@@ -49,23 +49,14 @@ public class MonsterMovement : MonoBehaviour
 
         state = "IDLE";
 
-        map = getCurrentMap(transform.position);
-        if (map)
-        {
-            mapScript = map.GetComponent<TileMap>();
-        }
-        else
-        {
-            Debug.LogError("MonsterMovement SetMap failed.");
-        }
+        SetCameraMap();
     }
 
-    public void FollowPlayer(GameObject player)
+    public void FollowEntity(GameObject entity)
     {
         Vector2 pos = (Vector2) transform.position;
 
-        PlayerMovement playerMovementScript = player.GetComponent<PlayerMovement>();
-        Vector3[] spots = playerMovementScript.getAdjacentTiles();
+        Vector3[] spots = mapScript.getAdjacentTiles(entity);
         int i = 0;
         float shortestDist = 0;
         int shortestIndex = 0;
@@ -83,7 +74,7 @@ public class MonsterMovement : MonoBehaviour
         Vector2 posTarget = spots[shortestIndex];
         posTarget.y += myCollider.bounds.size.y / 2;
         Vector2[] tPath = mapScript.FindWorldPath(pos, posTarget, myCollider);
-        if (tPath.Length > 1)
+        if (tPath != null && tPath.Length > 1)
         {
             myPath = tPath;
         }
@@ -114,7 +105,7 @@ public class MonsterMovement : MonoBehaviour
                     {
                         target = player;
                         state = "MOVING";
-                        FollowPlayer(player);
+                        FollowEntity(player);
                         break;
                     }
                 }
@@ -125,7 +116,7 @@ public class MonsterMovement : MonoBehaviour
         {
             float dist = Vector3.Distance(pos, target.transform.position);
             if (target != null && myPath == null && dist > 1)
-                FollowPlayer(target);
+                FollowEntity(target);
         }
 
         moveDirection = Vector2.zero;
@@ -202,7 +193,8 @@ public class MonsterMovement : MonoBehaviour
 
                 // Snap to the grid.
                 // TODO - Is buggy grid gets rounded into collision.
-                transform.position = Utils.RoundToGrid(pos, myRigidbody.velocity);
+                //transform.position = Utils.RoundToGrid(pos, velocity);
+                transform.position = Utils.RoundOffToGrid(pos);
             }
         }
 
@@ -225,7 +217,7 @@ public class MonsterMovement : MonoBehaviour
             if (!isMoving && myRigidbody.velocity != Vector2.zero)
             {
                 Vector2 velocity = myRigidbody.velocity;
-                Vector3 targetPos = Utils.RoundToGrid(pos, velocity);
+                Vector3 targetPos = Utils.RoundNextPosToGrid(pos, velocity);
                 float tx = Math.Abs(pos.x - targetPos.x);
                 float ty = Math.Abs(pos.y - targetPos.y);
                 float speedDist = speed * Time.unscaledDeltaTime;
@@ -248,31 +240,22 @@ public class MonsterMovement : MonoBehaviour
         myPath = null;
     }
 
-    public Vector3[] getAdjacentTiles()
+    public void SetCameraMap()
     {
-        Vector3 center = transform.position;
-        if (myRigidbody.velocity != Vector2.zero)
+        map = getCurrentMap(transform.position);
+        if (map)
         {
-            center = Utils.RoundToGrid(center, myRigidbody.velocity);
+            // Add Monster to Map Entities.
+            GameObject goEntities = map.transform.Find("Entities").gameObject;
+            if (goEntities != null && this.transform.parent != goEntities.transform)
+                this.transform.parent = goEntities.transform;
+
+            mapScript = map.GetComponent<TileMap>();
         }
-
-        List<Vector3> positions = new List<Vector3>();
-
-        Vector2[] adjacent = {
-            new Vector3(1, 0),
-            new Vector3(-1, 0),
-            new Vector3(0, 1),
-            new Vector3(0, -1)
-        };
-
-        foreach (Vector2 vec in adjacent)
+        else
         {
-            Vector2 tPos = (Vector2)center + vec;
-            if (mapScript.checkWorldCollision(tPos, myCollider.size))
-                continue;
-            positions.Add((Vector3)tPos);
+            Debug.LogError("MonsterMovement SetMap failed.");
         }
-        return positions.ToArray();
     }
 
     public GameObject getCurrentMap(Vector3 position)
@@ -280,7 +263,7 @@ public class MonsterMovement : MonoBehaviour
         GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
         foreach (GameObject map in goMaps)
         {
-            BoxCollider2D collider = map.transform.GetChild(1).GetComponent<BoxCollider2D>();
+            BoxCollider2D collider = map.transform.Find("Collider").gameObject.GetComponent<BoxCollider2D>();
             if (collider == null)
             {
                 Debug.LogError("Put a BoxCollider on the Grid child object of map: " + map.name);
@@ -291,4 +274,5 @@ public class MonsterMovement : MonoBehaviour
         }
         return null;
     }
+
 }
