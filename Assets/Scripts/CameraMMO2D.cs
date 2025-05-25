@@ -1,5 +1,6 @@
 // Simple MMO camera that always follows the player.
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using UnityEngine;
@@ -131,7 +132,7 @@ public class CameraMMO2D : MonoBehaviour
         if (bounds)
         {
             cameraBounds = bounds;
-            myCollider = cameraBounds.transform.GetChild(1).GetComponent<BoxCollider2D>();
+            myCollider = cameraBounds.transform.Find("Collider").GetComponent<BoxCollider2D>();
             if (myCollider == null)
             { 
                 Debug.LogWarning("Make sure BoxCollider2D is on tilemap Grid Object.");
@@ -145,5 +146,39 @@ public class CameraMMO2D : MonoBehaviour
     }
     // END MOD
 
+    public GameObject[] GetEntitiesInView(GameObject[] exclude = null)
+    {
+        Transform goEntities = cameraBounds.transform.Find("Entities");
+        if (goEntities == null)
+        {
+            Debug.LogWarning("GetEntitiesInView - No entities gameobject in map: " + name);
+            return null;
+        }
+        List<GameObject> tEntities = new List<GameObject>();
+
+        foreach (Transform tEntity in goEntities.transform)
+        {
+            if (IsTargetVisible(tEntity.gameObject))
+                tEntities.Add(tEntity.gameObject);
+        }
+        if (exclude != null)
+        {
+            for (int i=0; i < exclude.Length; ++i)
+                tEntities.Remove(exclude[i]);
+        }
+        return tEntities.ToArray();
+    }
+
+    bool IsTargetVisible(GameObject go)
+    {
+        var planes = GeometryUtility.CalculateFrustumPlanes(myCamera);
+        var point = go.transform.position;
+        foreach (var plane in planes)
+        {
+            if (plane.GetDistanceToPoint(point) < 0)
+                return false;
+        }
+        return true;
+    }
 }
 

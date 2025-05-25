@@ -16,12 +16,14 @@ using System.Linq;
 public class Player : MonoBehaviour
 {
     [Header("Components")]
-    public PlayerMovement myMovement;
+    public EntityMovement myMovement;
 
     [HideInInspector] public string state;
 
     protected Animator[] myAnimators = new Animator[2];
     protected SpriteLibrary[] mySpriteLibs = new SpriteLibrary[2];
+
+    //[HideInInspector] public bool isAttacking;
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +49,7 @@ public class Player : MonoBehaviour
             mySpriteLibs[1] = childTF.GetComponent<SpriteLibrary>();
             if (!mySpriteLibs[1]) Debug.Log("WEAPON SPRITELIB NOT FOUND.");
         }
-        myMovement = GetComponent<PlayerMovement>();
+        myMovement = GetComponent<EntityMovement>();
     }
 
     // Update is called once per frame
@@ -61,6 +63,7 @@ public class Player : MonoBehaviour
             mAnimator.SetBool("DEAD", state == "DEAD");
             mAnimator.SetFloat("LookX", myMovement.lookDirection.x);
             mAnimator.SetFloat("LookY", myMovement.lookDirection.y);
+            mAnimator.SetBool("Attack", GetComponent<EntityAttack>().target != null);
         }
 
     }

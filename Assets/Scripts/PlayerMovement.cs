@@ -6,31 +6,30 @@ using UnityEngine;
 
 using Debug = UnityEngine.Debug;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : EntityMovement
 {
-    [HideInInspector] public Vector2 lookDirection = Vector2.zero;
-    [HideInInspector] public Vector2 moveDirection = Vector2.zero;
-    public float speed = 10f;
-
     [HideInInspector] public CameraMMO2D cameraScript;
-    [HideInInspector] public Rigidbody2D myRigidbody;
-    [HideInInspector] public BoxCollider2D myCollider;
+    //[HideInInspector] public Rigidbody2D myRigidbody;
+    //[HideInInspector] public BoxCollider2D myCollider;
 
-    [HideInInspector] public bool hasCollided = false;
+    //[HideInInspector] public bool hasCollided = false;
 
-    protected GameObject map;
-    protected TileMap mapScript;
 
     protected bool canClickMove = false;
 
-    protected Vector2[] myPath = null;
-    protected int myPathIndex = 1;
-    protected bool isOnPath = false;
+    //protected Vector2[] myPath = null;
+    //protected int myPathIndex = 1;
+    //protected bool isOnPath = false;
 
-    protected bool snapToGrid = true;
+    //protected bool snapToGrid = true;
+
+    //protected GameObject target;
+
+    protected int targetIndex = 0;
+    protected GameObject[] EntitiesInView = null;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
         cameraScript = GameObject.FindWithTag("MainCamera").GetComponent<CameraMMO2D>();
         if (cameraScript == null)
@@ -38,13 +37,19 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError("MainCamera not found.");
         }
 
+        base.Start();
+
+
+        /*mainScript = GameObject.FindWithTag("Main").GetComponent<Main>();
         myRigidbody = GetComponent<Rigidbody2D>();
         myCollider = GetComponent<BoxCollider2D>();
 
-        SetCameraMap();
+        SetCameraMap();*/
+
+        //base.Init();
     }
 
-    public void FollowEntity(GameObject entity)
+    /*public void FollowEntity(GameObject entity)
     {
         Vector2 pos = (Vector2)transform.position;
 
@@ -74,6 +79,17 @@ public class PlayerMovement : MonoBehaviour
         {
             ResetPath();
         }
+    }*/
+
+    public int ClosestEntities(GameObject s1, GameObject s2)
+    {
+        float d1 = Vector3.Distance(s1.transform.position, transform.position);
+        float d2 = Vector3.Distance(s2.transform.position, transform.position);
+        if (d1 < d2)
+            return -1;
+        if (d1 > d2)
+            return 1;
+        return 0;
     }
 
     // Update is called once per frame
@@ -84,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 pos = transform.position;
 
         canClickMove = false;
-        if (myPath == null && pos.x % 0.5 == 0 && pos.y % 0.5 == 0)
+        if (myPath == null && pos.x % 0.5 == 0 && pos.x != 1 && pos.y % 0.5 == 0)
             canClickMove = true;
 
         if (canClickMove && Input.GetMouseButtonDown(0))
@@ -94,7 +110,14 @@ public class PlayerMovement : MonoBehaviour
             Collider2D collider = Physics2D.OverlapBox(posTarget, myCollider.size, 0f, 1 << LayerMask.NameToLayer("Monsters"));
             if (collider != null)
             {
-                FollowEntity(collider.gameObject);
+                if (target == collider.gameObject)
+                {
+                    FollowEntity(collider.gameObject);
+                }
+                else
+                {
+                    target = collider.gameObject;
+                }                
             }
             else
             {
@@ -110,6 +133,44 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
             Debug.Log("PlayerMovement myPath:" + myPath);
+        }
+
+        if (myRigidbody.velocity != Vector2.zero)
+        {
+            EntitiesInView = null;
+            targetIndex = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (target == null)
+            {
+                if (EntitiesInView == null)
+                {
+                    GameObject[] exclude = { transform.gameObject };
+                    EntitiesInView = cameraScript.GetEntitiesInView(exclude);
+                    Array.Sort(EntitiesInView, ClosestEntities);
+                }
+                target = EntitiesInView[targetIndex];
+                targetIndex = (targetIndex + 1) % EntitiesInView.Length;
+            }
+            else
+            {
+                FollowEntity(target);
+            }
+        }
+
+        if (target != null)
+        {
+            float dist = Vector3.Distance(myCollider.transform.position, target.transform.position);
+            if (dist <= 1f)
+            {
+                LookAtEntity(target);
+                GetComponent<EntityAttack>().target = target;
+            }
+            else
+            {
+                GetComponent<EntityAttack>().target = null;
+            }
         }
 
         // I had to remove it to let the grid rounding work properly. 
@@ -140,7 +201,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    /*void FixedUpdate()
     {
         Vector3 pos = transform.position;
 
@@ -161,6 +222,7 @@ public class PlayerMovement : MonoBehaviour
             if (myPathIndex >= myPath.Length)
             {
                 ResetPath();
+                LookAtEntity(target);
             }
         }
         else
@@ -230,14 +292,14 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         snapToGrid = true;
-    }
+    }*/
 
 
-    void ResetPath()
+    /*void ResetPath()
     {
         myPathIndex = 1;
         myPath = null;
-    }
+    }*/
 
     protected Vector3 clampPlayer(Vector3 destination)
     {
@@ -246,7 +308,7 @@ public class PlayerMovement : MonoBehaviour
         return cameraScript.ClampMapWithOffset(destination, offset);
     }
 
-    public void SetCameraMap()
+    public override void SetCameraMap()
     {
         map = getCurrentMap(transform.position);
         if (map)
@@ -279,7 +341,7 @@ public class PlayerMovement : MonoBehaviour
         SetCameraMap();
     }
 
-    public GameObject getCurrentMap(Vector3 position)
+    /*public GameObject getCurrentMap(Vector3 position)
     {
         GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
         foreach (GameObject map in goMaps)
@@ -294,7 +356,7 @@ public class PlayerMovement : MonoBehaviour
                 return map;
         }
         return null;
-    }
+    }*/
 
 
 }

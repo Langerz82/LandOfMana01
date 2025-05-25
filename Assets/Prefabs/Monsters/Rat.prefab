@@ -128,7 +128,7 @@ TextMesh:
   m_FontSize: 48
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: fbdfb42a01cb8440497b494dfb875091, type: 3}
+  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_Color:
     serializedVersion: 2
     rgba: 4278252287
@@ -177,6 +177,8 @@ GameObject:
   - component: {fileID: 292402310466598051}
   - component: {fileID: 8956009525585550688}
   - component: {fileID: 3923986015825912024}
+  - component: {fileID: 3556240633174968900}
+  - component: {fileID: 8661314981587267593}
   m_Layer: 8
   m_Name: Rat
   m_TagString: Monster
@@ -286,6 +288,43 @@ MonoBehaviour:
   movementInterval: 2
   state: 
   target: {fileID: 0}
+--- !u!114 &3556240633174968900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9191772409049330962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b5f5515bb5b94840a6086ac068af170, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackInterval: 1
+  attackRange: 1
+  target: {fileID: 0}
+--- !u!114 &8661314981587267593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9191772409049330962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59b36db3524cda74ba52ba4a40a8b562, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  level: 1
+  attack: 0
+  defense: 0
+  health: 0
+  luck: 0
+  modAttack: 1
+  modDefense: 1
+  modHealth: 1
+  modLuck: 1
 --- !u!1 &9206370062647427778
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,26 +6,14 @@ using UnityEngine;
 
 using Debug = UnityEngine.Debug;
 
-public class MonsterMovement : MonoBehaviour
+public class MonsterMovement : EntityMovement
 {
-    [HideInInspector] public Vector2 lookDirection = Vector2.zero;
-    [HideInInspector] public Vector2 moveDirection = Vector2.zero;
-    public float speed = 10f;
+    //protected bool hasCollided = false;
 
-    [HideInInspector] public CameraMMO2D cameraScript;
-    [HideInInspector] public Rigidbody2D myRigidbody;
-    [HideInInspector] public BoxCollider2D myCollider;
+    //protected GameObject map;
+    //protected TileMap mapScript;
 
-    [HideInInspector] public bool hasCollided = false;
-
-    protected GameObject map;
-    protected TileMap mapScript;
-
-    protected Vector2[] myPath = null;
-    protected int myPathIndex = 1;
-    protected bool isOnPath = false;
-
-    protected bool snapToGrid = true;
+    //protected bool snapToGrid = true;
 
     public float aggressionRadius = 0f;
     protected float aggressionTimer = 0f;
@@ -34,55 +22,28 @@ public class MonsterMovement : MonoBehaviour
     protected float movementTimer = 0f;
     public float movementInterval = 1f;
 
-    protected Main mainScript;
-
     [HideInInspector] public string state;
 
-    [HideInInspector] public GameObject target;
+    //[HideInInspector] public GameObject target;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
-        mainScript = GameObject.FindWithTag("Main").GetComponent<Main>();
-        myRigidbody = GetComponent<Rigidbody2D>();
-        myCollider = GetComponent<BoxCollider2D>();
+        base.Start();
 
+        /*cameraScript = GameObject.FindWithTag("MainCamera").GetComponent<CameraMMO2D>();
+        if (cameraScript == null)
+        {
+            Debug.LogError("MainCamera not found.");
+        }*/
+
+        //base.Init();
         state = "IDLE";
 
-        SetCameraMap();
+        
     }
 
-    public void FollowEntity(GameObject entity)
-    {
-        Vector2 pos = (Vector2) transform.position;
 
-        Vector3[] spots = mapScript.getAdjacentTiles(entity);
-        int i = 0;
-        float shortestDist = 0;
-        int shortestIndex = 0;
-        foreach (Vector3 spot in spots)
-        {
-            float dist = Vector2.Distance(pos, (Vector2)spot);
-            if (shortestDist == 0f || dist < shortestDist)
-            {
-                shortestIndex = i;
-                shortestDist = dist;
-            }
-            i++;
-        }
-
-        Vector2 posTarget = spots[shortestIndex];
-        posTarget.y += myCollider.bounds.size.y / 2;
-        Vector2[] tPath = mapScript.FindWorldPath(pos, posTarget, myCollider);
-        if (tPath != null && tPath.Length > 1)
-        {
-            myPath = tPath;
-        }
-        else
-        {
-            ResetPath();
-        }
-    }
 
     // Update is called once per frame
     void Update()
@@ -120,34 +81,9 @@ public class MonsterMovement : MonoBehaviour
         }
 
         moveDirection = Vector2.zero;
-
-        
-
-        /*if (canClickMove && Input.GetMouseButtonDown(0))
-        {
-            Vector2 posTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            posTarget.y += myCollider.bounds.size.y / 2;
-            Vector2[] tPath = mapScript.FindWorldPath((Vector2)pos, (Vector2)posTarget, myCollider);
-            if (tPath.Length > 1)
-            {
-                myPath = tPath;
-            }
-            else
-            {
-                ResetPath();
-            }
-            Debug.Log("CreatureMovement myPath:" + myPath);
-        }*/
     }
 
-    void LookAtTarget()
-    {
-        if (target == null)
-        { return; }
-        lookDirection = (target.transform.position - transform.position).normalized;
-    }
-
-    void FixedUpdate()
+    /*void FixedUpdate()
     {
         Vector3 pos = transform.position;
 
@@ -168,7 +104,7 @@ public class MonsterMovement : MonoBehaviour
             if (myPathIndex >= myPath.Length)
             {
                 ResetPath();
-                LookAtTarget();
+                LookAtEntity(target);
             }
         }
         else
@@ -231,48 +167,5 @@ public class MonsterMovement : MonoBehaviour
             }
         }
         snapToGrid = true;
-    }
-
-
-    void ResetPath()
-    {
-        myPathIndex = 1;
-        myPath = null;
-    }
-
-    public void SetCameraMap()
-    {
-        map = getCurrentMap(transform.position);
-        if (map)
-        {
-            // Add Monster to Map Entities.
-            GameObject goEntities = map.transform.Find("Entities").gameObject;
-            if (goEntities != null && this.transform.parent != goEntities.transform)
-                this.transform.parent = goEntities.transform;
-
-            mapScript = map.GetComponent<TileMap>();
-        }
-        else
-        {
-            Debug.LogError("MonsterMovement SetMap failed.");
-        }
-    }
-
-    public GameObject getCurrentMap(Vector3 position)
-    {
-        GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
-        foreach (GameObject map in goMaps)
-        {
-            BoxCollider2D collider = map.transform.Find("Collider").gameObject.GetComponent<BoxCollider2D>();
-            if (collider == null)
-            {
-                Debug.LogError("Put a BoxCollider on the Grid child object of map: " + map.name);
-                return null;
-            }
-            if (collider.bounds.Contains(position))
-                return map;
-        }
-        return null;
-    }
-
+    }*/
 }

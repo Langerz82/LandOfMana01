@@ -256,10 +256,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1746893309}
     m_Modifications:
-    - target: {fileID: 520264365, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
-      propertyPath: m_Offset.y
-      value: -0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 1289234771990996, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
       propertyPath: m_Name
       value: Warrior
@@ -308,10 +304,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8864883937867243671, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
-      propertyPath: m_SortingOrder
-      value: 21
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b4dd7850385ccb45b87b83a84a4ad4a, type: 3}
 --- !u!4 &520264361 stripped
@@ -326,10 +318,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1746893309}
     m_Modifications:
-    - target: {fileID: 9143965323781070740, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
-      propertyPath: m_Font
-      value: 
-      objectReference: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 9189111880992555370, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -372,14 +360,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9189111880992555370, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9190303047760506760, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9190975687177694142, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
-      propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9191772409049330962, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
