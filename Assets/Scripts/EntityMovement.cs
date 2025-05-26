@@ -59,7 +59,13 @@ public abstract class EntityMovement : MonoBehaviour
             if (myPathIndex >= myPath.Length)
             {
                 ResetPath();
-                LookAtEntity(target);
+
+                if(target != null)
+                {
+                    float dist = Vector2.Distance(transform.position, target.transform.position);
+                    if (dist <= 1f)
+                        LookAtEntity(target);
+                }
             }
         }
         else
