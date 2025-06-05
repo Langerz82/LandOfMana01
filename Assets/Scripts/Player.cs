@@ -13,10 +13,11 @@ using Math = System.Math;
 using System.Linq;
 
 [RequireComponent(typeof(PlayerMovement))]
-public class Player : MonoBehaviour
+public class Player : Entity
 {
     [Header("Components")]
-    public EntityMovement myMovement;
+    protected EntityMovement myMovement;
+    protected EntityAttack myEntityAttack;
 
     [HideInInspector] public string state;
 
@@ -28,6 +29,9 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        myMovement = GetComponent<EntityMovement>();
+        myEntityAttack = GetComponent<EntityAttack>();
+
         Transform childTF = transform.GetChild(0).Find("sprites").Find("sprite_body");
         if (childTF)
         {
@@ -49,7 +53,7 @@ public class Player : MonoBehaviour
             mySpriteLibs[1] = childTF.GetComponent<SpriteLibrary>();
             if (!mySpriteLibs[1]) Debug.Log("WEAPON SPRITELIB NOT FOUND.");
         }
-        myMovement = GetComponent<EntityMovement>();
+        EventDeath += Death;
     }
 
     // Update is called once per frame
@@ -66,6 +70,11 @@ public class Player : MonoBehaviour
             mAnimator.SetBool("Attack", GetComponent<EntityAttack>().target != null);
         }
 
+    }
+
+    public void Death()
+    {
+        Destroy(this.transform.gameObject);
     }
 
 }

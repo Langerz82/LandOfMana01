@@ -102,4 +102,7 @@ public class PlayerStats : EntityStats
     { return (getAttack() * 5) + getLuck(); }
     public override int BaseDamageDef()
     { return (getDefense() * 5) + getLuck(); }
+
+    public override void OnHealthChange()
+    { }
 }

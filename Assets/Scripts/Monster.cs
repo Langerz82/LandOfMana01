@@ -11,10 +11,11 @@ using Debug = UnityEngine.Debug;
 //using System.Linq;
 
 [RequireComponent(typeof(MonsterMovement))]
-public class Monster : MonoBehaviour
+public class Monster : Entity
 {
-    [Header("Components")]
-    public MonsterMovement myMovement;
+    protected MonsterMovement myMovement;
+    protected EntityDrop myEntityDrop;
+    protected EntityAttack myEntityAttack;
 
     [HideInInspector] public string state;
 
@@ -27,6 +28,8 @@ public class Monster : MonoBehaviour
     void Start()
     {
         myMovement = GetComponent<MonsterMovement>();
+        myEntityDrop = GetComponent<EntityDrop>();
+        myEntityAttack = GetComponent<EntityAttack>();
 
         mainScript = GameObject.FindWithTag("Main").GetComponent<Main>();
 
@@ -40,7 +43,7 @@ public class Monster : MonoBehaviour
             mySpriteLib = childTF.GetComponent<SpriteLibrary>();
             if (!mySpriteLib) Debug.Log("BODY SPRITELIB NOT FOUND.");
         }
-
+        EventDeath += Death;
     }
 
     // Update is called once per frame
@@ -52,6 +55,13 @@ public class Monster : MonoBehaviour
         myAnimator.SetBool("DEAD", state == "DEAD");
         myAnimator.SetFloat("LookX", myMovement.lookDirection.x);
         myAnimator.SetFloat("LookY", myMovement.lookDirection.y);
-
+        myAnimator.SetBool("Attack", myEntityAttack.target != null);
     }
+
+    public void Death()
+    {
+        //myEntityDrop.CreateDrop();
+        Destroy(this.transform.gameObject);
+    }
+
 }

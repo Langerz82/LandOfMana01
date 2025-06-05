@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -2528471039261674674}
   - component: {fileID: 8172684775676756248}
   - component: {fileID: 5635478385677393187}
-  m_Layer: 31
+  m_Layer: 8
   m_Name: Warrior
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -97,7 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 628cc763d4d455d4ca01f067d30ef6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myMovement: {fileID: 0}
   state: 
 --- !u!114 &-2528471039261674674
 MonoBehaviour:
@@ -114,10 +113,10 @@ MonoBehaviour:
   lookDirection: {x: 0, y: 0}
   moveDirection: {x: 0, y: 0}
   speed: 6
-  cameraScript: {fileID: 0}
   myRigidbody: {fileID: 0}
   myCollider: {fileID: 0}
-  hasCollided: 0
+  target: {fileID: 0}
+  cameraScript: {fileID: 0}
 --- !u!114 &8172684775676756248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b5f5515bb5b94840a6086ac068af170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackInterval: 1
+  attackInterval: 2
   attackRange: 1
   target: {fileID: 0}
 --- !u!114 &5635478385677393187
@@ -419,7 +418,7 @@ SpriteRenderer:
   m_SortingLayerID: -894526611
   m_SortingLayer: 2
   m_SortingOrder: 21
-  m_Sprite: {fileID: -1811775171, guid: 03206835b53a6d6449e2c907c140ef6b, type: 3}
+  m_Sprite: {fileID: 824709586, guid: 03206835b53a6d6449e2c907c140ef6b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

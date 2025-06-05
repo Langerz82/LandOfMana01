@@ -8,51 +8,36 @@ using Debug = UnityEngine.Debug;
 
 public class MonsterMovement : EntityMovement
 {
-    //protected bool hasCollided = false;
-
-    //protected GameObject map;
-    //protected TileMap mapScript;
-
-    //protected bool snapToGrid = true;
-
     public float aggressionRadius = 0f;
     protected float aggressionTimer = 0f;
     public float aggressionInterval = 1f;
 
-    //protected float movementTimer = 0f;
-    //public float movementInterval = 0.5f;
-
     [HideInInspector] public string state;
-
-    //[HideInInspector] public GameObject target;
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
 
-        /*cameraScript = GameObject.FindWithTag("MainCamera").GetComponent<CameraMMO2D>();
-        if (cameraScript == null)
-        {
-            Debug.LogError("MainCamera not found.");
-        }*/
-
-        //base.Init();
-        state = "IDLE";
-
-        
+        state = "IDLE";        
     }
-
-
 
     // Update is called once per frame
     void Update()
     {
         Vector3 pos = transform.position;
 
-        aggressionTimer += Time.deltaTime;
-        //movementTimer += Time.deltaTime;
+        if (target != null)
+        {
+            if (target.GetComponent<EntityAttack>() != null)
+            {
+                EntityAttack entityAttack = GetComponent<EntityAttack>();
+                if (entityAttack.StartAttack(target))
+                    LookAtEntity(target);
+            }
+        }
 
+        aggressionTimer += Time.deltaTime;
         if (state == "IDLE" && aggressionRadius > 0f)
         {
 
@@ -95,7 +80,7 @@ public class MonsterMovement : EntityMovement
             if (target != null && myPath == null)
             {
                 float dist = Vector3.Distance(pos, target.transform.position);
-                if (dist > 1f)
+                if (dist == 0f || dist > 1f)
                     FollowEntity(target);
             }
         }

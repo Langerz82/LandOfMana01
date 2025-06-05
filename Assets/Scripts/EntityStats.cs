@@ -22,4 +22,5 @@ public abstract class EntityStats : MonoBehaviour
     public abstract int BaseDamage();
     public abstract int BaseDamageDef();
 
+    public abstract void OnHealthChange();
 }

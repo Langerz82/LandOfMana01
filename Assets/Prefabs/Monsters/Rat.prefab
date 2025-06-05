@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 3923986015825912024}
   - component: {fileID: 3556240633174968900}
   - component: {fileID: 8661314981587267593}
+  - component: {fileID: 410891182259937355}
   m_Layer: 8
   m_Name: Rat
   m_TagString: Monster
@@ -262,7 +263,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65258c56ed6bc774c9d70b4b65873876, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myMovement: {fileID: 0}
   state: 
 --- !u!114 &3923986015825912024
 MonoBehaviour:
@@ -279,15 +279,12 @@ MonoBehaviour:
   lookDirection: {x: 0, y: 0}
   moveDirection: {x: 0, y: 0}
   speed: 3
-  cameraScript: {fileID: 0}
   myRigidbody: {fileID: 0}
   myCollider: {fileID: 0}
-  hasCollided: 0
+  target: {fileID: 0}
   aggressionRadius: 10
   aggressionInterval: 2
-  movementInterval: 2
   state: 
-  target: {fileID: 0}
 --- !u!114 &3556240633174968900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,7 +297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b5f5515bb5b94840a6086ac068af170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackInterval: 1
+  attackInterval: 2
   attackRange: 1
   target: {fileID: 0}
 --- !u!114 &8661314981587267593
@@ -325,6 +322,21 @@ MonoBehaviour:
   modDefense: 1
   modHealth: 1
   modLuck: 1
+--- !u!114 &410891182259937355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9191772409049330962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13592e182fda69548bce8c536cb36899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DropList:
+  - gameObject: {fileID: 0}
+    chance: 0
 --- !u!1 &9206370062647427778
 GameObject:
   m_ObjectHideFlags: 0

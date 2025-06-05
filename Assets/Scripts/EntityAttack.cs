@@ -10,6 +10,9 @@ using Debug = UnityEngine.Debug;
 
 public class EntityAttack : MonoBehaviour
 {
+    protected Entity myEntity;
+    protected EntityStats myStats;
+
     public float attackInterval = 2f;
     protected float attackTimer = 0f;
     public float attackRange = 1f;
@@ -19,7 +22,8 @@ public class EntityAttack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        myEntity = GetComponent<Entity>();
+        myStats = GetComponent<EntityStats>();
     }
 
     // Update is called once per frame
@@ -39,18 +43,29 @@ public class EntityAttack : MonoBehaviour
         }
     }
 
+    public bool StartAttack(GameObject target)
+    {
+        float dist = Vector3.Distance(transform.position, target.transform.position);
+        if (dist <= attackRange)
+        {
+            this.target = target;
+            return true;
+        }
+        this.target = null;
+        return false;
+    }
+
     public void Hit(GameObject target)
     {
-        //GetComponent<EntityMovement>().LookAtEntity(target);
-
-        EntityStats myStats = GetComponent<EntityStats>();
         EntityStats targetStats = target.GetComponent<EntityStats>();
+        if (targetStats == null)
+            return;
 
         bool isCrit = false;
         if (Random.Range(0, 100) < (myStats.BaseCrit() - targetStats.BaseCritDef()))
             isCrit = true;
 
-        int damage = Random.Range(1, 10);
+        int damage = Random.Range(1, 20);
         damage += myStats.BaseDamage() - targetStats.BaseDamageDef();
         damage = Math.Max(damage, 0);
 
@@ -64,8 +79,7 @@ public class EntityAttack : MonoBehaviour
             targetStats.hp = 0;
             // DIE.
             Debug.Log("target died.");
-            Destroy(target);
+            target.GetComponent<Entity>().OnDeath();
         }
     }
-
 }

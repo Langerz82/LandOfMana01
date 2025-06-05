@@ -55,4 +55,6 @@ public class MonsterStats : EntityStats
     public override int BaseDamageDef()
     { return (getDefense() * 5) + getLuck(); }
 
+    public override void OnHealthChange()
+    { }
 }

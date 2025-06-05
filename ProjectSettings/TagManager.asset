@@ -9,6 +9,7 @@ TagManager:
   - Monster
   - EntityName
   - Main
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - UI
   - Collision
   - Map
-  - Monsters
+  - Entities
   - 
   - 
   - 
@@ -41,7 +42,7 @@ TagManager:
   - 
   - 
   - 
-  - Player
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0
