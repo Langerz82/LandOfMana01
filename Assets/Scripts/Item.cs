@@ -26,24 +26,24 @@ public class Item : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player != null)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (Vector2.Distance(transform.position, player.transform.position) < pickupDistance)
-                UseItem(player);
+            if (player != null)
+            {
+
+                if (Vector2.Distance(transform.position, player.transform.position) < pickupDistance)
+                    UseItem(player);
+            }
         }
     }
 
-    void OnTriggerStay(Collider other)
-    {
-    }
-
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player")
             player = other.gameObject;
     }
 
-    void OnTriggerExit(Collider other)
+    void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player")
             player = null;
