@@ -22,7 +22,7 @@ public class Player : Entity
     [HideInInspector] public string state;
 
     protected Animator[] myAnimators = new Animator[2];
-    protected SpriteLibrary[] mySpriteLibs = new SpriteLibrary[2];
+    public SpriteLibrary[] mySpriteLibs = new SpriteLibrary[2];
 
     //[HideInInspector] public bool isAttacking;
 
@@ -69,12 +69,10 @@ public class Player : Entity
             mAnimator.SetFloat("LookY", myMovement.lookDirection.y);
             mAnimator.SetBool("Attack", GetComponent<EntityAttack>().target != null);
         }
-
     }
 
     public void Death()
     {
         Destroy(this.transform.gameObject);
     }
-
 }

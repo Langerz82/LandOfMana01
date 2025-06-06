@@ -22,8 +22,11 @@ public class TileMap : MonoBehaviour
 //    protected PathFinder.Map mapPath = new PathFinder.Map();
 
     //protected int width = GetComponent<SuperMap>().m_Width;
-    public int mWidth = 0;
-    public int mHeight = 0;
+    public int m_Width = 0;
+    public int m_Height = 0;
+    public Vector3 m_Size = Vector3.zero;
+    public Vector3 m_Center = Vector3.zero;
+    public Bounds m_Bounds;
 
     protected bool[,] mapCollision = null;
 
@@ -34,9 +37,6 @@ public class TileMap : MonoBehaviour
     {
         if (superMapScript == null)
             return;
-
-        int width = superMapScript.m_Width;
-        int height = superMapScript.m_Height;
 
         Gizmos.color = new Color(0f, 1f, 0f);
         Vector2 size = new Vector2(1, 1);
@@ -56,35 +56,28 @@ public class TileMap : MonoBehaviour
             r.enabled = visible;
     }
 
+    // Start is called before the first frame update
     void Awake()
     {
         SetVisible(false);
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         superMapScript = GetComponent<SuperMap>();
         collisionMask = LayerMask.NameToLayer("Collision"); // 1 << LayerMask.NameToLayer("Collision");
-        int width = superMapScript.m_Width;
-        int height = superMapScript.m_Height;
+        m_Width = superMapScript.m_Width;
+        m_Height = superMapScript.m_Height;
+        m_Size = new Vector3(m_Width, m_Height, 0);
+        m_Center = new Vector3(transform.position.x + (m_Size.x/2), transform.position.y - (m_Size.y/2), 0);
+        m_Bounds = new Bounds(m_Center, m_Size);
 
-        mapCollision = new bool[width, height];
+        mapCollision = new bool[m_Width, m_Height];
         Vector2 size = new Vector2(agentRadius, agentRadius);
-        for (int i = 0; i < height; ++i)
+        for (int i = 0; i < m_Height; ++i)
         {
-            for (int j = 0; j < width; ++j)
+            for (int j = 0; j < m_Width; ++j)
             {
                 mapCollision[j, i] = checkGridCollision(new Vector2(j, i), size, true);
             }
         }
-
-        /*for (int i = 0; i < 10; ++i)
-        {
-            Vector2 start = new Vector2(Random.Range(0, width), Random.Range(0, height));
-            Vector2 end = new Vector2(Random.Range(0, width), Random.Range(0, height));
-            FindPath(start, end);
-        }*/
     }
 
     public Vector2[] FindWorldPath(Vector2 start, Vector2 end, Collider2D collider)

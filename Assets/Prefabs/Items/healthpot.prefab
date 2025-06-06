@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: health
   modifier: 500
-  spriteLibAsset: {fileID: 0}
+  spriteLibraryAsset: {fileID: 0}
 --- !u!61 &8815712323026850618
 BoxCollider2D:
   m_ObjectHideFlags: 0

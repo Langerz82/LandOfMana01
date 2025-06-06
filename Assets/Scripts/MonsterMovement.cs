@@ -19,22 +19,24 @@ public class MonsterMovement : EntityMovement
     {
         base.Start();
 
-        state = "IDLE";        
+        state = "IDLE";
+        SetCameraMap();
     }
+
 
     // Update is called once per frame
     void Update()
     {
         Vector3 pos = transform.position;
 
-        if (target != null)
+        if (target != null && target.GetComponent<EntityAttack>() != null)
         {
-            if (target.GetComponent<EntityAttack>() != null)
-            {
-                EntityAttack entityAttack = GetComponent<EntityAttack>();
-                if (entityAttack.StartAttack(target))
-                    LookAtEntity(target);
-            }
+            if (myEntityAttack.StartAttack(target))
+                LookAtEntity(target);
+        }
+        else
+        {
+            myEntityAttack.StartAttack(null);
         }
 
         aggressionTimer += Time.deltaTime;
@@ -51,7 +53,7 @@ public class MonsterMovement : EntityMovement
                     {
                         target = player;
                         state = "MOVING";
-                        FollowEntity(player);
+                        FollowEntity(player, getAttackRange());
                         break;
                     }
                 }
@@ -81,7 +83,7 @@ public class MonsterMovement : EntityMovement
             {
                 float dist = Vector3.Distance(pos, target.transform.position);
                 if (dist == 0f || dist > 1f)
-                    FollowEntity(target);
+                    FollowEntity(target, getAttackRange());
             }
         }
 

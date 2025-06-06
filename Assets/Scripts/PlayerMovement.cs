@@ -38,6 +38,7 @@ public class PlayerMovement : EntityMovement
         }
 
         base.Start();
+        SetCameraMap();
     }
 
     public int ClosestEntities(GameObject s1, GameObject s2)
@@ -71,7 +72,7 @@ public class PlayerMovement : EntityMovement
             {
                 if (target == collider.gameObject)
                 {
-                    FollowEntity(collider.gameObject);
+                    FollowEntity(collider.gameObject, getAttackRange());
                 }
                 else
                 {
@@ -115,18 +116,17 @@ public class PlayerMovement : EntityMovement
             }
             else
             {
-                FollowEntity(target);
+                FollowEntity(target, getAttackRange());
             }
         }
 
-        if (target != null)
+        if (target != null && target.GetComponent<EntityAttack>() != null)
         {
-            if (target.GetComponent<EntityAttack>() != null)
-            {
-                EntityAttack entityAttack = GetComponent<EntityAttack>();
-                if (entityAttack.StartAttack(target))
-                    LookAtEntity(target);
-            }
+            if (myEntityAttack.StartAttack(target))
+                LookAtEntity(target);
+        } else
+        {
+            myEntityAttack.StartAttack(null);
         }
 
         // I had to remove it to let the grid rounding work properly. 

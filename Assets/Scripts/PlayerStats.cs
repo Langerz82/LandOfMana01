@@ -13,6 +13,9 @@ public class PlayerStats : EntityStats
     public int luck = 0;
     public int free = 0;
 
+    public int armor = 0;
+    public int weapon = 0;
+
     protected int[] xpLevel = null;
     // Start is called before the first frame update
     void Start()
@@ -82,8 +85,8 @@ public class PlayerStats : EntityStats
         return 0;
     }
 
-    public override int getAttack() { return attack; }
-    public override int getDefense() { return defense; }
+    public override int getAttack() { return attack + weapon; }
+    public override int getDefense() { return defense + armor; }
     public override int getHealth() { return health; }
     public override int getLuck() { return luck; }
 

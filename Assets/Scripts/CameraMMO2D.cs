@@ -25,6 +25,7 @@ public class CameraMMO2D : MonoBehaviour
 
     // BEGIN MOD - JL - 8/6/24, 30/6/24
     [HideInInspector] public BoxCollider2D myCollider;
+    public Bounds myBounds;
     public GameObject cameraBounds;
 
     // END MOD
@@ -60,8 +61,8 @@ public class CameraMMO2D : MonoBehaviour
             position = Vector2.Lerp(transform.position, goal, Time.deltaTime * damp);
         }*/
 
-        if (myCollider)
-        {
+        //if (myBounds != null)
+        //{
             //Debug.Log("position:" + position);
             Vector3 pos = ClampCamera(position);
             if (pos != Vector3.zero && pos != position)
@@ -69,7 +70,7 @@ public class CameraMMO2D : MonoBehaviour
                 position.x = pos.x;
                 position.y = pos.y;
             }
-        }
+        //}
 
         // END MOD
         // convert to 3D but keep Z to stay in front of 2D plane
@@ -83,20 +84,20 @@ public class CameraMMO2D : MonoBehaviour
             myCamera.orthographicSize);
         //Debug.Log("ClampMap - camSize:" + camSize);
 
-        return ClampMapWithOffset(myCollider, camSize, position);
+        return ClampMapWithOffset(myBounds, camSize, position);
     }
 
     public Vector3 ClampMapWithOffset(Vector3 position, Vector2 offset)
     {
-        return ClampMapWithOffset(myCollider, offset, position);
+        return ClampMapWithOffset(myBounds, offset, position);
     }
 
     // BEGIN MOD - JL - 6/6/24
     // Exact Copy from function in CameraMMO2D.
-    protected Vector3 ClampMapWithOffset(BoxCollider2D boxCollider, Vector2 offset, Vector3 position)
+    protected Vector3 ClampMapWithOffset(Bounds myBounds, Vector2 offset, Vector3 position)
     {
-        Vector2 clipMin = boxCollider.bounds.min;
-        Vector2 clipMax = boxCollider.bounds.max;
+        Vector2 clipMin = myBounds.min;
+        Vector2 clipMax = myBounds.max;
         if (offset != Vector2.zero)
         {
             //Debug.Log("ClampMap - mapMin:" + mapMin);
@@ -132,16 +133,17 @@ public class CameraMMO2D : MonoBehaviour
         if (bounds)
         {
             cameraBounds = bounds;
-            myCollider = cameraBounds.transform.Find("Collider").GetComponent<BoxCollider2D>();
-            if (myCollider == null)
+            myBounds = bounds.GetComponent<TileMap>().m_Bounds;
+            //myCollider = cameraBounds.transform.Find("Collider").GetComponent<BoxCollider2D>();
+            /*if (myBounds == null)
             { 
-                Debug.LogWarning("Make sure BoxCollider2D is on tilemap Grid Object.");
-            }
+                Debug.LogWarning("Make sure myBounds is on tilemap Grid Object.");
+            }*/
         }
         else
         {
             cameraBounds = null;
-            myCollider = null;
+            //myBounds = null;
         }
     }
     // END MOD

@@ -19,6 +19,7 @@ public abstract class EntityMovement : MonoBehaviour
 
     [HideInInspector] public Rigidbody2D myRigidbody;
     [HideInInspector] public BoxCollider2D myCollider;
+    [HideInInspector] protected EntityAttack myEntityAttack;
 
     protected Vector2[] myPath = null;
     protected int myPathIndex = 1;
@@ -34,8 +35,7 @@ public abstract class EntityMovement : MonoBehaviour
         mainScript = GameObject.FindWithTag("Main").GetComponent<Main>();
         myRigidbody = GetComponent<Rigidbody2D>();
         myCollider = GetComponent<BoxCollider2D>();
-
-        SetCameraMap();
+        myEntityAttack = GetComponent<EntityAttack>();
     }
 
     void FixedUpdate()
@@ -130,30 +130,56 @@ public abstract class EntityMovement : MonoBehaviour
         snapToGrid = true;
     }
 
-    public void FollowEntity(GameObject entity)
+    protected float getAttackRange()
     {
-        Vector2 pos = (Vector2)transform.position;
-
-        Vector3[] spots = mapScript.getAdjacentTiles(entity);
-        int i = 0;
-        float shortestDist = 0;
-        int shortestIndex = 0;
-        foreach (Vector3 spot in spots)
+        EntityAttack entityAttack = GetComponent<EntityAttack>();
+        if (entityAttack != null)
         {
-            float dist = Vector2.Distance(pos, (Vector2)spot);
-            if (shortestDist == 0f || dist < shortestDist)
-            {
-                shortestIndex = i;
-                shortestDist = dist;
-            }
-            i++;
+            return entityAttack.attackRange;
+        }
+        return 1f;
+    }
+
+    public void FollowEntity(GameObject entity, float range = 1f)
+    {
+        if (entity.GetComponent<Item>() != null)
+        {
+            range = 0f;
         }
 
-        Vector2 posTarget = spots[shortestIndex];
+        Vector2 pos = (Vector2)transform.position;
+        Vector2 posTarget = Utils.RoundOffToGrid(entity.transform.position);
+
         posTarget.y += myCollider.bounds.size.y / 2;
         Vector2[] tPath = mapScript.FindWorldPath(pos, posTarget, myCollider);
         if (tPath != null && tPath.Length > 1)
         {
+            // If range > 0f traverse to nearest block within range.
+            if (range > 0f)
+            {
+                int i = 0;
+                Vector2 node2 = Vector2.zero;
+                Vector2 lastNode = tPath[tPath.Length-1];
+                foreach (Vector2 node in tPath)
+                {
+                    if (node2 != Vector2.zero)
+                    {
+                        Vector2 direction = (node - node2).normalized;
+                        for (Vector2 n = node2; n != node; n += direction)
+                        {
+                            if (Vector2.Distance(n, lastNode) <= range)
+                            {
+                                lastNode = n;
+                                break;
+                            }
+                        }
+                    }
+                    node2 = node;
+                    i++;
+                }
+                tPath[i-1] = lastNode;
+                Array.Resize(ref tPath, i);
+            }
             myPath = tPath;
         }
         else
@@ -179,16 +205,17 @@ public abstract class EntityMovement : MonoBehaviour
     public GameObject getCurrentMap(Vector3 position)
     {
         GameObject[] goMaps = GameObject.FindGameObjectsWithTag("Map");
-        foreach (GameObject map in goMaps)
+        foreach (GameObject goMap in goMaps)
         {
-            BoxCollider2D collider = map.transform.Find("Collider").gameObject.GetComponent<BoxCollider2D>();
-            if (collider == null)
+            //BoxCollider2D collider = map.transform.Find("Collider").gameObject.GetComponent<BoxCollider2D>();
+            TileMap map = goMap.GetComponent<TileMap>();
+            /*if (GetComponent<Collider>() == null)
             {
                 Debug.LogError("Put a BoxCollider on the Grid child object of map: " + map.name);
                 return null;
-            }
-            if (collider.bounds.Contains(position))
-                return map;
+            }*/
+            if (map.m_Bounds.Contains(position))
+                return goMap;
         }
         return null;
     }

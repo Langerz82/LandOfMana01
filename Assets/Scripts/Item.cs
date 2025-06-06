@@ -13,7 +13,7 @@ public class Item : MonoBehaviour
 
     public float modifier;
 
-    public SpriteLibraryAsset spriteLibAsset;
+    public SpriteLibraryAsset spriteLibraryAsset;
 
     protected float pickupDistance = 1f;
 
@@ -33,21 +33,26 @@ public class Item : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
+    {
+    }
+
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
             player = other.gameObject;
     }
 
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")
             player = null;
     }
 
-    void UseItem(GameObject player)
+    void UseItem(GameObject goPlayer)
     {
-        EntityStats playerStats = player.GetComponent<EntityStats>();
+        PlayerStats playerStats = goPlayer.GetComponent<PlayerStats>();
+        Player player = goPlayer.GetComponent<Player>();
 
         if (itemType == "health")
         {
@@ -55,12 +60,21 @@ public class Item : MonoBehaviour
         }
         else if (itemType == "weapon")
         {
-            // TODO
+            if (modifier > playerStats.weapon)
+            {
+                playerStats.weapon = (int) modifier;
+                player.mySpriteLibs[1].spriteLibraryAsset = spriteLibraryAsset;
+            }
         }
         else if (itemType == "armor")
         {
-            // TODO
+            if (modifier > playerStats.armor)
+            {
+                playerStats.armor = (int) modifier;
+                player.mySpriteLibs[0].spriteLibraryAsset = spriteLibraryAsset;
+            }
         }
+
         Destroy(this.transform.gameObject);
     }
 

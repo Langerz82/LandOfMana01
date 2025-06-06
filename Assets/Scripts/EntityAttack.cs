@@ -45,11 +45,14 @@ public class EntityAttack : MonoBehaviour
 
     public bool StartAttack(GameObject target)
     {
-        float dist = Vector3.Distance(transform.position, target.transform.position);
-        if (dist <= attackRange)
+        if (target != null && target != this.transform.gameObject)
         {
-            this.target = target;
-            return true;
+            float dist = Vector3.Distance(transform.position, target.transform.position);
+            if (dist <= attackRange)
+            {
+                this.target = target;
+                return true;
+            }
         }
         this.target = null;
         return false;
