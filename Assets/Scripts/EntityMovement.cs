@@ -140,6 +140,21 @@ public abstract class EntityMovement : MonoBehaviour
         return 1f;
     }
 
+    public void MoveToPosition(Vector3 target)
+    {
+        Vector2 pos = (Vector2)transform.position;
+        Vector2 posTarget = (Vector2)target;
+        Vector2[] tPath = mapScript.FindWorldPath(pos, posTarget, myCollider);
+        if (tPath != null && tPath.Length > 1)
+        {
+            myPath = tPath;
+        }
+        else
+        {
+            ResetPath();
+        }
+    }
+
     public void FollowEntity(GameObject entity, float range = 1f)
     {
         if (entity.GetComponent<Item>() != null)
@@ -149,6 +164,10 @@ public abstract class EntityMovement : MonoBehaviour
 
         Vector2 pos = (Vector2)transform.position;
         Vector2 posTarget = Utils.RoundOffToGrid(entity.transform.position);
+        if (myRigidbody.velocity != Vector2.zero)
+        {
+            posTarget = Utils.RoundNextPosToGrid(entity.transform.position, myRigidbody.velocity);
+        }
 
         posTarget.y += myCollider.bounds.size.y / 2;
         Vector2[] tPath = mapScript.FindWorldPath(pos, posTarget, myCollider);

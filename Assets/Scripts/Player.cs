@@ -53,7 +53,8 @@ public class Player : Entity
             mySpriteLibs[1] = childTF.GetComponent<SpriteLibrary>();
             if (!mySpriteLibs[1]) Debug.Log("WEAPON SPRITELIB NOT FOUND.");
         }
-        EventDeath += Death;
+        EventDeath += OnDeath;
+        EventRespawn += OnRespawn;
     }
 
     // Update is called once per frame
@@ -71,8 +72,13 @@ public class Player : Entity
         }
     }
 
-    public void Death()
+    public void OnDeath()
     {
         Destroy(this.transform.gameObject);
+    }
+
+    public void OnRespawn()
+    {
+        state = "IDLE";
     }
 }

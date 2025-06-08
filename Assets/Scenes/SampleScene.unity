@@ -183,7 +183,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -192,11 +192,11 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: -1
+  m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 0
-  m_HDR: 1
+  m_HDR: 0
   m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
@@ -250,8 +250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712812c2486341e44bf58646010798f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  refHight: 480
-  PPU: 32
+  refHight: 240
+  PPU: 16
 --- !u!1001 &520264359
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -321,14 +321,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1746893309}
     m_Modifications:
-    - target: {fileID: 410891182259937355, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
-      propertyPath: DropList.Array.data[0].chance
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 410891182259937355, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
-      propertyPath: DropList.Array.data[0].gameObject
+    - target: {fileID: 5263760250242204486, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
+      propertyPath: Camera
       value: 
-      objectReference: {fileID: 7161262971841836112, guid: e4273574552e94243aecf5b4ba11e1d6, type: 3}
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 5332970871894227597, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 519420031}
     - target: {fileID: 9189111880992555370, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -375,7 +375,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9191772409049330962, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
       propertyPath: m_Name
-      value: Rat
+      value: Crab
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}

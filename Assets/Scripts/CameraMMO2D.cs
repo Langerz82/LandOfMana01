@@ -38,7 +38,7 @@ public class CameraMMO2D : MonoBehaviour
         SetCameraBounds(cameraBounds);
     }
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         if (!target) return;
 
@@ -134,16 +134,10 @@ public class CameraMMO2D : MonoBehaviour
         {
             cameraBounds = bounds;
             myBounds = bounds.GetComponent<TileMap>().m_Bounds;
-            //myCollider = cameraBounds.transform.Find("Collider").GetComponent<BoxCollider2D>();
-            /*if (myBounds == null)
-            { 
-                Debug.LogWarning("Make sure myBounds is on tilemap Grid Object.");
-            }*/
         }
         else
         {
             cameraBounds = null;
-            //myBounds = null;
         }
     }
     // END MOD

@@ -19,6 +19,8 @@ public class EntityAttack : MonoBehaviour
 
     [HideInInspector] public GameObject target;
 
+    [HideInInspector] public bool isAttacked = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +53,7 @@ public class EntityAttack : MonoBehaviour
             if (dist <= attackRange)
             {
                 this.target = target;
+                target.GetComponent<EntityAttack>().isAttacked = true;
                 return true;
             }
         }
@@ -82,7 +85,7 @@ public class EntityAttack : MonoBehaviour
             targetStats.hp = 0;
             // DIE.
             Debug.Log("target died.");
-            target.GetComponent<Entity>().OnDeath();
+            target.GetComponent<Entity>().Death();
         }
     }
 }

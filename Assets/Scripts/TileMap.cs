@@ -62,7 +62,7 @@ public class TileMap : MonoBehaviour
         SetVisible(false);
 
         superMapScript = GetComponent<SuperMap>();
-        collisionMask = LayerMask.NameToLayer("Collision"); // 1 << LayerMask.NameToLayer("Collision");
+        collisionMask = LayerMask.NameToLayer("Collision");
         m_Width = superMapScript.m_Width;
         m_Height = superMapScript.m_Height;
         m_Size = new Vector3(m_Width, m_Height, 0);

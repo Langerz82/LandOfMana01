@@ -31,7 +31,7 @@ public class Item : MonoBehaviour
             if (player != null)
             {
 
-                if (Vector2.Distance(transform.position, player.transform.position) < pickupDistance)
+                if (Vector2.Distance(transform.position, player.transform.position) <= pickupDistance)
                     UseItem(player);
             }
         }

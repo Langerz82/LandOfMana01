@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MonsterStats : EntityStats
 {
+    protected Monster myMonster;
+
     public int level = 1;
 
     public int attack = 0;
@@ -20,8 +22,10 @@ public class MonsterStats : EntityStats
     // Start is called before the first frame update
     void Start()
     {
-        SetStats();
-        hp = getHPMax();
+        myMonster = GetComponent<Monster>();
+        myMonster.EventRespawn += Respawn;
+
+        Respawn();
     }
 
     protected override void SetStats()
@@ -57,4 +61,10 @@ public class MonsterStats : EntityStats
 
     public override void OnHealthChange()
     { }
+
+    public void Respawn()
+    {
+        SetStats();
+        hp = getHPMax();
+    }
 }

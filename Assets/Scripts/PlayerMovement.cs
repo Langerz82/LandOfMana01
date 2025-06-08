@@ -111,8 +111,11 @@ public class PlayerMovement : EntityMovement
                     EntitiesInView = cameraScript.GetEntitiesInView(exclude);
                     Array.Sort(EntitiesInView, ClosestEntities);
                 }
-                target = EntitiesInView[targetIndex];
-                targetIndex = (targetIndex + 1) % EntitiesInView.Length;
+                if (EntitiesInView.Length > 0 && targetIndex < EntitiesInView.Length)
+                {
+                    target = EntitiesInView[targetIndex];
+                    targetIndex = (targetIndex + 1) % EntitiesInView.Length;
+                }
             }
             else
             {
