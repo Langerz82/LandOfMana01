@@ -329,6 +329,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 8956009525585550688, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
+      propertyPath: m_DeathTimeLength
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 9189111880992555370, guid: 2987b7f367bd16444b8ed5ba432e5d76, type: 3}
       propertyPath: m_RootOrder
       value: 0

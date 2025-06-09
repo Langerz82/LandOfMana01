@@ -72,7 +72,7 @@ public class Player : Entity
         }
     }
 
-    public void OnDeath()
+    public void OnDeath(GameObject killer)
     {
         Destroy(this.transform.gameObject);
     }

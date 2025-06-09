@@ -33,6 +33,32 @@ public class TileMap : MonoBehaviour
     protected List<Vector2> collisionGrid = new List<Vector2>();
     protected Vector2 colPosition;
 
+    //protected List<Tuple<GameObject, float>> monsterList = new List<Tuple<GameObject, float>>();
+
+    /*public void AddMonster(GameObject go)
+    {
+        monsterList.Add(new Tuple<GameObject, float>(Instantiate(go), 0f));
+    }*/
+
+    // Update is called once per frame
+    void Update()
+    {
+        /*foreach (var monster in monsterList)
+        {
+            float time = monster.Item2 + Time.deltaTime;
+            
+            if (time > monster.Item1.GetComponent<Monster>().m_DeathTimeLength)
+            {
+                GameObject go = Instantiate(monster.Item1);
+                go.GetComponent<Monster>().Respawn();
+                monsterList.Remove(monster);
+                continue;
+            }
+            monsterList.Add(new Tuple<GameObject, float>(monster.Item1, time));
+            monsterList.Remove(monster);
+        }*/
+    }
+
     private void OnDrawGizmos()
     {
         if (superMapScript == null)
@@ -178,6 +204,26 @@ public class TileMap : MonoBehaviour
         return (collider != null);
     }
 
+    public bool checkEntityCollision(GameObject player, Vector2 position, Vector3 velocity, Vector2 size)
+    {
+        Vector3 pos = Utils.RoundOffToGrid(position) + velocity.normalized;
+        Collider2D collider = Physics2D.OverlapBox(pos, size, 0f, 1 << LayerMask.NameToLayer("Entities"));
+        if (collider != null)
+        {
+            if (collider.gameObject.tag == "Player")
+                return false;
+            if (collider.gameObject.tag == "Monster") {
+                //Vector3 pos = collider.transform.position;
+                //if (pos == player.transform.position)
+                //    return false;
+                //if (pos == Utils.RoundOffToGrid(pos))
+                //    return true;
+                return true;
+            }
+        }
+        return false;
+    }
+
     public bool checkGridCollision(Vector2 position, Vector2 size, bool drawGizmo = false)
     {
         float x = transform.position.x;
@@ -185,12 +231,6 @@ public class TileMap : MonoBehaviour
         Vector2 pos = new Vector2(x + position.x + agentRadius, y - position.y - agentRadius);
         //size = new Vector2(agentRadius, agentRadius);
         return checkWorldCollision(pos, size, drawGizmo);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public Vector3[] getAdjacentTiles(GameObject entity)
@@ -222,5 +262,12 @@ public class TileMap : MonoBehaviour
             positions.Add((Vector3)tPos);
         }
         return positions.ToArray();
+    }
+
+    public void AddEntity(GameObject go)
+    {
+        GameObject goEntities = this.transform.Find("Entities").gameObject;
+        if (goEntities != null && go.transform.parent != goEntities.transform)
+            go.transform.parent = goEntities.transform;
     }
 }

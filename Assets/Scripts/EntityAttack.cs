@@ -12,6 +12,7 @@ public class EntityAttack : MonoBehaviour
 {
     protected Entity myEntity;
     protected EntityStats myStats;
+    protected EntityMovement myMovement;
 
     public float attackInterval = 2f;
     protected float attackTimer = 0f;
@@ -26,6 +27,7 @@ public class EntityAttack : MonoBehaviour
     {
         myEntity = GetComponent<Entity>();
         myStats = GetComponent<EntityStats>();
+        myMovement = GetComponent<EntityMovement>();
     }
 
     // Update is called once per frame
@@ -47,6 +49,11 @@ public class EntityAttack : MonoBehaviour
 
     public bool StartAttack(GameObject target)
     {
+        if (target != null && !target.activeSelf)
+        {
+            this.target = null;
+            return false;
+        }
         if (target != null && target != this.transform.gameObject)
         {
             float dist = Vector3.Distance(transform.position, target.transform.position);
@@ -85,7 +92,8 @@ public class EntityAttack : MonoBehaviour
             targetStats.hp = 0;
             // DIE.
             Debug.Log("target died.");
-            target.GetComponent<Entity>().Death();
+            target.GetComponent<Entity>().Death(this.gameObject);
+            //myMovement.EntitiesInView = null;
         }
     }
 }

@@ -75,6 +75,7 @@ public class Item : MonoBehaviour
             }
         }
 
+        goPlayer.GetComponent<PlayerMovement>().ResetTargets();
         Destroy(this.transform.gameObject);
     }
 

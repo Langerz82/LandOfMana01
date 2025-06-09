@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography;
 using UnityEngine;
 
 using Debug = UnityEngine.Debug;
@@ -12,7 +13,7 @@ public class MonsterMovement : EntityMovement
     protected float aggressionTimer = 0f;
     public float aggressionInterval = 1f;
 
-    protected Vector3 vecHome;
+    public Vector3 vecHome;
     public float m_ReturnHomeDistance = 10f;
 
     protected Monster myMonster;
@@ -21,6 +22,7 @@ public class MonsterMovement : EntityMovement
     protected override void Start()
     {
         myMonster = GetComponent<Monster>();
+        myMonster.EventDeath += OnDeath;
         myMonster.EventRespawn += OnRespawn;
 
         base.Start();
@@ -112,5 +114,17 @@ public class MonsterMovement : EntityMovement
     {
         myEntityAttack.StartAttack(null);
         target = null;
+        this.transform.position = vecHome;
+    }
+
+    void OnDeath(GameObject killer)
+    {
+        myEntityAttack.StartAttack(null);
+        target = null;
+        PlayerMovement myPlayerMovement = killer.GetComponent<PlayerMovement>();
+        if (myPlayerMovement != null)
+        {
+            myPlayerMovement.ResetTargets();
+        }
     }
 }

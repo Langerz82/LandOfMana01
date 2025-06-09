@@ -154,6 +154,8 @@ public class CameraMMO2D : MonoBehaviour
 
         foreach (Transform tEntity in goEntities.transform)
         {
+            if (!tEntity.gameObject.activeSelf)
+                continue;
             if (IsTargetVisible(tEntity.gameObject))
                 tEntities.Add(tEntity.gameObject);
         }

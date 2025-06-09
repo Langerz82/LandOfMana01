@@ -37,7 +37,7 @@ public class EntityDrop : MonoBehaviour
 
     }
 
-    void Death()
+    void Death(GameObject killer)
     {
         GameObject go = null;
         int rand = Random.Range(0, 1000);
@@ -52,7 +52,8 @@ public class EntityDrop : MonoBehaviour
         }
         if (go != null)
         {
-            Instantiate(go, transform.position, transform.rotation);
+            GameObject item = Instantiate(go, transform.position, transform.rotation);
+            this.GetComponent<EntityMovement>().mapScript.AddEntity(item);
         }
     }
 }

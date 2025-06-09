@@ -45,7 +45,8 @@ public class MonsterStats : EntityStats
 
     public override int getHPMax()
     {
-        int hp = 100 + (getHealth() * 35) + (getHealth() * getHealth());
+        int hp = 1;
+        //int hp = 50 + (getHealth() * 35) + (getHealth() * getHealth());
         return hp;
     }
 

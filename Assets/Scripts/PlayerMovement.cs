@@ -26,7 +26,7 @@ public class PlayerMovement : EntityMovement
     //protected GameObject target;
 
     protected int targetIndex = 0;
-    protected GameObject[] EntitiesInView = null;
+    [HideInInspector] public GameObject[] EntitiesInView = null;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -70,14 +70,17 @@ public class PlayerMovement : EntityMovement
             Collider2D collider = Physics2D.OverlapBox(posTarget, myCollider.size, 0f, 1 << LayerMask.NameToLayer("Entities"));
             if (collider != null)
             {
-                if (target == collider.gameObject)
+                if (collider.gameObject.activeSelf)
                 {
-                    FollowEntity(collider.gameObject, getAttackRange());
+                    if (target == collider.gameObject)
+                    {
+                        FollowEntity(collider.gameObject, getAttackRange());
+                    }
+                    else
+                    {
+                        target = collider.gameObject;
+                    }
                 }
-                else
-                {
-                    target = collider.gameObject;
-                }                
             }
             else
             {
@@ -110,8 +113,9 @@ public class PlayerMovement : EntityMovement
                     GameObject[] exclude = { transform.gameObject };
                     EntitiesInView = cameraScript.GetEntitiesInView(exclude);
                     Array.Sort(EntitiesInView, ClosestEntities);
-                }
-                if (EntitiesInView.Length > 0 && targetIndex < EntitiesInView.Length)
+                    targetIndex = 0;
+                }                
+                if (EntitiesInView != null && EntitiesInView.Length > 0)
                 {
                     target = EntitiesInView[targetIndex];
                     targetIndex = (targetIndex + 1) % EntitiesInView.Length;
@@ -198,5 +202,13 @@ public class PlayerMovement : EntityMovement
     {
         myRigidbody.transform.position = position;
         SetCameraMap();
+    }
+
+    public void ResetTargets()
+    {
+        target = null;
+        myEntityAttack.StartAttack(null);
+        EntitiesInView = null;
+        targetIndex = 0;
     }
 }

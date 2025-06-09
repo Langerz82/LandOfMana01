@@ -5,8 +5,9 @@ using UnityEngine;
 
 public static class Utils
 {
-    public static Vector3 RoundNextPosToGrid(Vector3 position, Vector2 velocity)
+    public static Vector3 RoundNextPosToGrid(Vector3 position, Vector3 velocity)
     {
+        //return RoundOffToGrid(position) + velocity.normalized;
         Vector3 tPosition = position;
         if (velocity.x != 0)
         {

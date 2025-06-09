@@ -24,7 +24,7 @@ public class Monster : Entity
 
     protected Main mainScript;
 
-    public float m_DeathTimeLength = 30f;
+    public float m_DeathTimeLength = 5f;
     protected float m_DeathTimer = 0f;
 
     // Start is called before the first frame update
@@ -50,21 +50,23 @@ public class Monster : Entity
             if (!mySpriteLib) Debug.Log("BODY SPRITELIB NOT FOUND.");
         }
 
-        OnRespawn();
+        //OnRespawn();
+        Init();
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_DeathTimer += Time.deltaTime;
-        if (m_DeathTimer > m_DeathTimeLength)
-        {
-            Respawn();
-            m_DeathTimer = 0;
-        }
-
         if (state == "DEAD")
+        {
+            /*m_DeathTimer += Time.deltaTime;
+            if (m_DeathTimer > m_DeathTimeLength)
+            {
+                //Respawn();
+                m_DeathTimer = 0;
+            }*/
             return;
+        }
 
         bool isMoving = (myMovement.myRigidbody.velocity != Vector2.zero);
 
@@ -75,18 +77,25 @@ public class Monster : Entity
         myAnimator.SetBool("Attack", myEntityAttack.target != null);
     }
 
-    // TODO
-    protected void OnDeath()
+    protected void OnDeath(GameObject killer)
     {
-        //myEntityDrop.CreateDrop();
-        //Destroy(this.transform.gameObject);
-        //this.transform.position.z = -1;
+        Invoke("Respawn", m_DeathTimeLength);
+        //Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
         state = "DEAD";
+        
     }
 
     protected void OnRespawn()
     {
-        //this.transform.position.z = 0;
+        //Instantiate(goRespawn, myMovement.vecHome, this.transform.rotation);
+        this.gameObject.SetActive(true);
+        Init();
+    }
+
+    public void Init()
+    {
         state = "IDLE";
+        goRespawn = this.gameObject;
     }
 }

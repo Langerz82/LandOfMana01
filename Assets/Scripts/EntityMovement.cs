@@ -12,8 +12,8 @@ public abstract class EntityMovement : MonoBehaviour
     [HideInInspector] public Vector2 moveDirection = Vector2.zero;
     public float speed = 10f;
 
-    protected GameObject map;
-    protected TileMap mapScript;
+    public GameObject map;
+    public TileMap mapScript;
 
     protected Main mainScript;
 
@@ -88,11 +88,15 @@ public abstract class EntityMovement : MonoBehaviour
                 hasCollided = true;
                 snapToGrid = false;
 
-                // Snap to the grid.
-                // TODO - Is buggy grid gets rounded into collision.
-                //transform.position = Utils.RoundToGrid(pos, velocity);
                 transform.position = Utils.RoundOffToGrid(pos);
             }
+            /*if (mapScript.checkEntityCollision(this.gameObject, pos, myRigidbody.velocity, myCollider.size))
+            {
+                hasCollided = true;
+                snapToGrid = false;
+
+                transform.position = Utils.RoundOffToGrid(pos);
+            }*/
         }
 
         if (hasCollided || isOnPath)
@@ -245,11 +249,12 @@ public abstract class EntityMovement : MonoBehaviour
         if (map)
         {
             // Add Monster to Map Entities.
-            GameObject goEntities = map.transform.Find("Entities").gameObject;
+            /*GameObject goEntities = map.transform.Find("Entities").gameObject;
             if (goEntities != null && this.transform.parent != goEntities.transform)
-                this.transform.parent = goEntities.transform;
+                this.transform.parent = goEntities.transform;*/
 
             mapScript = map.GetComponent<TileMap>();
+            mapScript.AddEntity(gameObject);
         }
         else
         {
