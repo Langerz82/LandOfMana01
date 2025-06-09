@@ -204,9 +204,10 @@ public class TileMap : MonoBehaviour
         return (collider != null);
     }
 
-    public bool checkEntityCollision(GameObject player, Vector2 position, Vector3 velocity, Vector2 size)
+    public bool checkEntityCollision(Vector3 position, Vector3 velocity, Vector2 size)
     {
-        Vector3 pos = Utils.RoundOffToGrid(position) + velocity.normalized;
+        //Vector3 pos = Utils.RoundOffToGrid(position) + velocity.normalized;
+        Vector3 pos = position + (Vector3) velocity.normalized;
         Collider2D collider = Physics2D.OverlapBox(pos, size, 0f, 1 << LayerMask.NameToLayer("Entities"));
         if (collider != null)
         {

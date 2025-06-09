@@ -49,11 +49,12 @@ public class EntityAttack : MonoBehaviour
 
     public bool StartAttack(GameObject target)
     {
-        if (target != null && !target.activeSelf)
+        if (target == null || !target.activeSelf || target.GetComponent<EntityAttack>() == null)
         {
             this.target = null;
             return false;
         }
+
         if (target != null && target != this.transform.gameObject)
         {
             float dist = Vector3.Distance(transform.position, target.transform.position);
@@ -64,6 +65,7 @@ public class EntityAttack : MonoBehaviour
                 return true;
             }
         }
+
         this.target = null;
         return false;
     }

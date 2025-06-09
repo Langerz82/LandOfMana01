@@ -15,7 +15,7 @@ public class Item : MonoBehaviour
 
     public SpriteLibraryAsset spriteLibraryAsset;
 
-    protected float pickupDistance = 1f;
+    protected float pickupDistance = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -26,15 +26,15 @@ public class Item : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
             if (player != null)
             {
 
                 if (Vector2.Distance(transform.position, player.transform.position) <= pickupDistance)
                     UseItem(player);
             }
-        }
+        //}
     }
 
     void OnTriggerEnter2D(Collider2D other)

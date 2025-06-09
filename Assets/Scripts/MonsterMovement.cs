@@ -40,15 +40,8 @@ public class MonsterMovement : EntityMovement
 
         Vector3 pos = transform.position;
 
-        if (target != null && target.GetComponent<EntityAttack>() != null)
-        {
-            if (myEntityAttack.StartAttack(target))
-                LookAtEntity(target);
-        }
-        else
-        {
-            myEntityAttack.StartAttack(null);
-        }
+        if (myEntityAttack.StartAttack(target))
+            LookAtEntity(target);
 
         if (myMonster.state == "IDLE")
         {
@@ -104,6 +97,14 @@ public class MonsterMovement : EntityMovement
                 myEntityAttack.StartAttack(null);
                 target = null;
                 MoveToPosition(vecHome);
+                myMonster.state = "HOME";
+            }
+        }
+        else if (myMonster.state == "HOME")
+        {
+            if (transform.position == vecHome)
+            {
+                myMonster.state = "IDLE";
             }
         }
 

@@ -83,20 +83,14 @@ public abstract class EntityMovement : MonoBehaviour
             Vector2 velocity = (moveDirection != Vector2.zero) ? moveDirection * speed : myRigidbody.velocity;
             Vector2 nextOffset = velocity * Time.deltaTime; // * (Vector2.one / myCollider.size);
             Vector2 center = nextOffset + (Vector2)pos + myCollider.offset;
-            if (mapScript.checkWorldCollision(center, myCollider.size))
+            if (mapScript.checkWorldCollision(center, myCollider.size) ||
+                mapScript.checkEntityCollision(pos, velocity, myCollider.size))
             {
                 hasCollided = true;
                 snapToGrid = false;
 
                 transform.position = Utils.RoundOffToGrid(pos);
             }
-            /*if (mapScript.checkEntityCollision(this.gameObject, pos, myRigidbody.velocity, myCollider.size))
-            {
-                hasCollided = true;
-                snapToGrid = false;
-
-                transform.position = Utils.RoundOffToGrid(pos);
-            }*/
         }
 
         if (hasCollided || isOnPath)
